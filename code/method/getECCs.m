@@ -63,6 +63,7 @@ for i=1:length(enzymes)
                 %If solution was feasible then calculate the control coefficient
                 %objCC       = delta_V./delta_Ea;%(perturbation-1);%delta_Ea;
                 ECCs(i)     = objCC;
+                disp([enzyme ' control coefficient : ' num2str(objCC)])
                 maxKcats(i) = max(Kcats);
             end
         end

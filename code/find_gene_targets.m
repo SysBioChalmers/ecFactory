@@ -136,5 +136,5 @@ catch
     disp('The model is not suitable for robust ecFSEOF')
 end
 disp(' ')
-
+cd (current)
 %%
