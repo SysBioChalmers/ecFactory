@@ -103,39 +103,38 @@ expYield = 0.49*WT_yield;
 
 %% 8.- Run Enzyme control analysis
 %Check if model can carry flux for the target rxn
-if flux & solution.x(growthPos)>0
-    %Run Enzyme sensitivity analysis
-    try
-        %Set suboptimal growth rate as lb, target rxn as objective and 
-        %unconstrained glucose uptake
-        tempModel = setParam(const_ecModel,'lb',growthPos,0.5*solution.x(growthPos));
-        tempModel = setParam(tempModel,'obj',target_pos,1);
-        tempModel = setParam(tempModel,'ub',CS_index,1000);
-        ECCs      = getECCs(tempModel,target_pos);
-        writetable(ECCs,['../../results/' results_tag '_targets/' results_tag '_ECCs.txt'],'QuoteStrings',false,'Delimiter','\t')
-    catch
-        disp('The model is not suitable for ECC analysis')
-    end
-    
-    try
-        [optStrain,candidates,step] = ecFactory(const_ecModel,target_rxn,const_ecModel.rxns(CS_index),expYield,CS_MW,results_folder);
-        candidates.FCC = zeros(height(candidates),1);
-        try
-            [iA,iB] = ismember(candidates.enzymes,ECCs.enzymes);
-            candidates.FCC(find(iA)) = ECCs.CC(iB);
-            writetable(candidates,[results_folder '/compatible_genes_results.txt'],'Delimiter','\t','QuoteStrings',false);
-        catch
-            disp('No ECCs file available for this case')
-        end
-        %Generate transporters target file
-        rxnsTable     = readtable([results_folder '/rxnsResults_ecFSEOF.txt'],'Delimiter','\t');
-        transpTargets = getTransportTargets(rxnsTable,tempModel);
-        writetable(transpTargets,[results_folder '/transporter_targets.txt'],'Delimiter','\t','QuoteStrings',false);
-    catch
-        disp('The model is not suitable for robust ecFSEOF')
-    end
-    disp(' ')
-else
-	disp('The model is not able to carry flux through the target reaction with the imposed constraints')
+%Run Enzyme sensitivity analysis
+try
+    %Set suboptimal growth rate as lb, target rxn as objective and
+    %unconstrained glucose uptake
+    tempModel = setParam(const_ecModel,'lb',growthPos,0.5*solution.x(growthPos));
+    tempModel = setParam(tempModel,'obj',target_pos,1);
+    tempModel = setParam(tempModel,'ub',CS_index,1000);
+    ECCs      = getECCs(tempModel,target_pos);
+    writetable(ECCs,['../../results/' results_tag '_targets/' results_tag '_ECCs.txt'],'QuoteStrings',false,'Delimiter','\t')
+catch
+    disp('The model is not suitable for ECC analysis')
 end
+%% 9.- Run ecFactory method
+try
+    [optStrain,candidates,step] = ecFactory(const_ecModel,target_rxn,const_ecModel.rxns(CS_index),expYield,CS_MW,results_folder);
+    candidates.FCC = zeros(height(candidates),1);
+    try
+        [iA,iB] = ismember(candidates.enzymes,ECCs.enzymes);
+        candidates.FCC(find(iA)) = ECCs.CC(iB);
+        writetable(candidates,[results_folder '/compatible_genes_results.txt'],'Delimiter','\t','QuoteStrings',false);
+    catch
+        disp('No ECCs file available for this case')
+    end
+    %Generate transporter targets file (lists a number of transport steps
+    %with no enzymatic annotation that are relevant for enhancing target
+    %product formation.
+    rxnsTable     = readtable([results_folder '/rxnsResults_ecFSEOF.txt'],'Delimiter','\t');
+    transpTargets = getTransportTargets(rxnsTable,tempModel);
+    writetable(transpTargets,[results_folder '/transporter_targets.txt'],'Delimiter','\t','QuoteStrings',false);
+catch
+    disp('The model is not suitable for robust ecFSEOF')
+end
+disp(' ')
+
 %%
