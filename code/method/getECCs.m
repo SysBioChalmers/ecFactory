@@ -31,6 +31,7 @@ current          = pwd;
 ECCs             = zeros(length(enzymes),1);
 maxKcats         = zeros(length(enzymes),1);
 cd GECKO/geckomat/utilities
+disp('* Computing enzyme control coefficients')
 for i=1:length(enzymes)
     enzyme     = enzymes{i};
     temp_model = model;
