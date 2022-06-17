@@ -1,0 +1,1157 @@
+Ids	names
+YAL001C  	"TSV115, FUN24                                        "
+YAL003W  	TEF5                                                 
+YAL025C  	                                                     
+YAL032C  	FUN20                                                
+YAL033W  	FUN53                                                
+YAL034W-a	"NSL2, DSN3                                           "
+YAL035C-A	                                                     
+YAL038W  	PYK1                                                 
+YAL041W  	CLS4                                                 
+YAL043C  	FUN39                                                
+YAR007C  	"RPA1, FUN3, BUF2                                     "
+YAR008W  	FUN4                                                 
+YAR019C  	LYT1                                                 
+YBL004W  	                                                     
+YBL014C  	                                                     
+YBL018C  	                                                     
+YBL020W  	                                                     
+YBL023C  	                                                     
+YBL026W  	"SNP3, SMX5                                           "
+YBL030C  	"OP1, ANC2, AAC2                                      "
+YBL034C  	                                                     
+YBL035C  	                                                     
+YBL040C  	                                                     
+YBL041W  	PRS3                                                 
+YBL050W  	                                                     
+YBL073W  	                                                     
+YBL074C  	                                                     
+YBL076C  	                                                     
+YBL077W  	                                                     
+YBL084C  	"SNB1, APC3                                           "
+YBL092W  	                                                     
+YBL097W  	                                                     
+YBL105C  	"STT1, HPO2, CLY15                                    "
+YBR002C  	                                                     
+YBR004C  	FMP44                                                
+YBR011C  	PPA1                                                 
+YBR029C  	CDG1                                                 
+YBR038W  	                                                     
+YBR049C  	GRF2                                                 
+YBR055C  	"TSM7269, RNA6                                        "
+YBR060C  	"SIR5, RRR1                                           "
+YBR070C  	                                                     
+YBR079C  	TIF32                                                
+YBR080C  	ANU4                                                 
+YBR087W  	                                                     
+YBR087W  	                                                     
+YBR088C  	                                                     
+YBR089W  	                                                     
+YBR091C  	TIM12                                                
+YBR102C  	USA3                                                 
+YBR109C  	                                                     
+YBR110W  	                                                     
+YBR123C  	                                                     
+YBR124W  	                                                     
+YBR135W  	                                                     
+YBR136W  	"SAD3, ESR1                                           "
+YBR140C  	"PPD1, GLC1                                           "
+YBR142W  	                                                     
+YBR143C  	"SUP47, SUP1, SAL4                                    "
+YBR152W  	                                                     
+YBR153W  	                                                     
+YBR154C  	                                                     
+YBR155W  	                                                     
+YBR160W  	"SRM5, HSL5, CDK1                                     "
+YBR167C  	RPP2                                                 
+YBR190W  	                                                     
+YBR192W  	PYT1                                                 
+YBR193C  	                                                     
+YBR196C  	CDC30                                                
+YBR198C  	TAF90                                                
+YBR202W  	MCM7                                                 
+YBR211C  	ARP100                                               
+YBR233W-A	                                                     
+YBR234C  	                                                     
+YBR236C  	                                                     
+YBR237W  	RNA5                                                 
+YBR243C  	TUR1                                                 
+YBR247C  	MEG1                                                 
+YBR252W  	                                                     
+YBR253W  	MED22                                                
+YBR254C  	                                                     
+YBR256C  	                                                     
+YBR257W  	                                                     
+YBR265W  	                                                     
+YCL003W  	                                                     
+YCL004W  	"YCL003W, PEL1                                        "
+YCL017C  	SPL1                                                 
+YCL031C  	                                                     
+YCL031C  	                                                     
+YCL043C  	"TRG1, MFP1                                           "
+YCL052C  	                                                     
+YCL053C  	                                                     
+YCL054W  	                                                     
+YCL059C  	                                                     
+YCR012W  	                                                     
+YCR012W  	                                                     
+YCR013C  	                                                     
+YCR013C  	                                                     
+YCR035C  	                                                     
+YCR052W  	                                                     
+YCR054C  	                                                     
+YCR057C  	"UTP1, YCR058C, YCR055C                               "
+YCR072C  	                                                     
+YCR093W  	"SMD6, ROS1, NOT1                                     "
+YDL003W  	"SCC1, RHC21, PDS3                                    "
+YDL004W  	                                                     
+YDL007W  	"YTA5, YHS4                                           "
+YDL008W  	                                                     
+YDL014W  	LOT3                                                 
+YDL015C  	                                                     
+YDL016C  	                                                     
+YDL017W  	"SAS1, LSD6                                           "
+YDL028C  	RPK1                                                 
+YDL029W  	ACT2                                                 
+YDL030W  	                                                     
+YDL031W  	                                                     
+YDL043C  	RNA11                                                
+YDL045C  	                                                     
+YDL055C  	"SRB1, VIG9, MPG1                                     "
+YDL058W  	INT1                                                 
+YDL060W  	                                                     
+YDL064W  	                                                     
+YDL084W  	                                                     
+YDL087C  	"EPE1, EXM2                                           "
+YDL092W  	                                                     
+YDL097C  	NAS4                                                 
+YDL098C  	                                                     
+YDL102W  	"TEX1, POL3, HPR6                                     "
+YDL103C  	UAP1                                                 
+YDL105W  	QRI2                                                 
+YDL108W  	                                                     
+YDL111C  	                                                     
+YDL120W  	                                                     
+YDL126C  	                                                     
+YDL132W  	                                                     
+YDL139C  	                                                     
+YDL140C  	"SUA8, RPB220, RPB1                                   "
+YDL141W  	ACC2                                                 
+YDL143W  	"ANC2, TCP4                                           "
+YDL145C  	"SOO1, RET1, SEC33                                    "
+YDL147W  	NAS5                                                 
+YDL148C  	UTP2                                                 
+YDL150W  	RPC4                                                 
+YDL152W  	                                                     
+YDL153C  	UTP3                                                 
+YDL163W  	                                                     
+YDL164C  	MMS8                                                 
+YDL165W  	"NOT2, DNA19                                          "
+YDL166C  	                                                     
+YDL193W  	                                                     
+YDL195W  	WEB1                                                 
+YDL196W  	                                                     
+YDL205C  	                                                     
+YDL207W  	"BRR3, RSS1                                           "
+YDL208W  	                                                     
+YDL209C  	NTC40                                                
+YDL212W  	APF1                                                 
+YDL217C  	                                                     
+YDL220C  	EST4                                                 
+YDL221W  	                                                     
+YDL235C  	                                                     
+YDR002W  	"SFO1, HTN1, CST20                                    "
+YDR013W  	CDC101                                               
+YDR016C  	                                                     
+YDR021W  	                                                     
+YDR023W  	                                                     
+YDR037W  	GCD5                                                 
+YDR041W  	                                                     
+YDR044W  	                                                     
+YDR045C  	                                                     
+YDR047W  	HEM6                                                 
+YDR050C  	                                                     
+YDR050C  	                                                     
+YDR052C  	"DNA52, LSD7                                          "
+YDR053W  	                                                     
+YDR054C  	"UBC3, DNA6                                           "
+YDR060W  	NOC1                                                 
+YDR062W  	"TSC1, SCS1                                           "
+YDR064W  	"RPS13C, RPS13B                                       "
+YDR081C  	                                                     
+YDR082W  	                                                     
+YDR086C  	                                                     
+YDR087C  	                                                     
+YDR088C  	SLT17                                                
+YDR091C  	                                                     
+YDR113C  	                                                     
+YDR118W  	                                                     
+YDR141C  	                                                     
+YDR145W  	"TAF68, TAF61                                         "
+YDR160W  	SHR10                                                
+YDR164C  	                                                     
+YDR166C  	                                                     
+YDR167W  	"TAF25, TAF23                                         "
+YDR168W  	SMO1                                                 
+YDR170C  	                                                     
+YDR172W  	"[PSI(+)], [PSI], SUP36, SUP2, SUF12, SAL3, PNM2, GST1"
+YDR177W  	                                                     
+YDR180W  	                                                     
+YDR182W  	"ESP2, DSR1, DSC1                                     "
+YDR187C  	                                                     
+YDR188W  	"TCP20, TCP6, HTR3                                    "
+YDR189W  	                                                     
+YDR190C  	"TIP48, TIH1, TIP49A                                  "
+YDR196C  	                                                     
+YDR201W  	                                                     
+YDR208W  	                                                     
+YDR211W  	                                                     
+YDR212W  	CCT1                                                 
+YDR224C  	SPT12                                                
+YDR224C  	SPT12                                                
+YDR228C  	                                                     
+YDR232W  	CYD1                                                 
+YDR235W  	"SNU65, MUD16                                         "
+YDR236C  	                                                     
+YDR238C  	                                                     
+YDR240C  	MUD10                                                
+YDR243C  	                                                     
+YDR246W  	                                                     
+YDR267C  	                                                     
+YDR280W  	                                                     
+YDR288W  	                                                     
+YDR292C  	                                                     
+YDR299W  	                                                     
+YDR301W  	YHH1                                                 
+YDR302W  	                                                     
+YDR303C  	                                                     
+YDR308C  	MED21                                                
+YDR311W  	                                                     
+YDR320C-A	HSK2                                                 
+YDR324C  	                                                     
+YDR325W  	"YCS5, TIE1                                           "
+YDR327W  	                                                     
+YDR328C  	"CBF3D, MGO1                                          "
+YDR331W  	                                                     
+YDR339C  	UTP24                                                
+YDR341C  	RRS1                                                 
+YDR353W  	                                                     
+YDR355C  	                                                     
+YDR356W  	"NUF1, XCM1                                           "
+YDR361C  	                                                     
+YDR362C  	                                                     
+YDR365C  	                                                     
+YDR367W  	                                                     
+YDR373W  	                                                     
+YDR376W  	                                                     
+YDR381W  	SHE11                                                
+YDR390C  	UAL1                                                 
+YDR394W  	"YTA2, YNT1                                           "
+YDR396W  	                                                     
+YDR397C  	YDR1                                                 
+YDR398W  	                                                     
+YDR404C  	                                                     
+YDR407C  	                                                     
+YDR412W  	                                                     
+YDR413C  	                                                     
+YDR416W  	NTC90                                                
+YDR427W  	                                                     
+YDR427W  	                                                     
+YDR429C  	                                                     
+YDR434W  	                                                     
+YDR437W  	                                                     
+YDR449C  	                                                     
+YDR454C  	PUR5                                                 
+YDR460W  	RIG2                                                 
+YDR464W  	                                                     
+YDR468C  	                                                     
+YDR472W  	                                                     
+YDR473C  	RNA3                                                 
+YDR478W  	                                                     
+YDR487C  	                                                     
+YDR489W  	CDC105                                               
+YDR498C  	                                                     
+YDR499W  	"PIE1, DDC2                                           "
+YDR510W  	                                                     
+YDR526C  	                                                     
+YDR527W  	                                                     
+YDR531W  	                                                     
+YEL002C  	                                                     
+YEL019C  	                                                     
+YEL026W  	                                                     
+YEL032W  	                                                     
+YEL034W  	TIF51A                                               
+YEL035C  	                                                     
+YEL055C  	                                                     
+YEL058W  	AGM1                                                 
+YER003C  	PMI                                                  
+YER006W  	                                                     
+YER008C  	PSL1                                                 
+YER009W  	                                                     
+YER012W  	                                                     
+YER013W  	                                                     
+YER018C  	                                                     
+YER021W  	SUN2                                                 
+YER022W  	MED17                                                
+YER023W  	ORE2                                                 
+YER025W  	SUI4                                                 
+YER029C  	                                                     
+YER036C  	                                                     
+YER038C  	                                                     
+YER043C  	                                                     
+YER048W-A	                                                     
+YER074W-A	                                                     
+YER082C  	KRE31                                                
+YER093C  	AVO3                                                 
+YER094C  	SCS32                                                
+YER104W  	                                                     
+YER112W  	"USS1, SDB23                                          "
+YER125W  	"SMM1, UBY1, NPI1, MUT2, MDP1                         "
+YER126C  	                                                     
+YER127W  	                                                     
+YER133W  	"DIS2S1, PP1, DIS2, CID1                              "
+YER136W  	SEC19                                                
+YER146W  	                                                     
+YER147C  	                                                     
+YER148W  	"TBP1, BTF1                                           "
+YER157W  	"SEC34, GRD20                                         "
+YER159C  	NCB1                                                 
+YER165W  	                                                     
+YER168C  	TNT1                                                 
+YER171W  	REM1                                                 
+YER172C  	"PRP44, SNU246, SLT22, RSS1                           "
+YFL002C  	                                                     
+YFL005W  	SRO6                                                 
+YFL008W  	CHL10                                                
+YFL009W  	                                                     
+YFL017C  	PAT1                                                 
+YFL018W-A	                                                     
+YFL022C  	                                                     
+YFL024C  	                                                     
+YFL029C  	CIV1                                                 
+YFL035C  	                                                     
+YFL035C-A	                                                     
+YFL037W  	"SHE8, ARM10                                          "
+YFL038C  	YP2                                                  
+YFL039C  	"ABY1, END7                                           "
+YFL045C  	ALG4                                                 
+YFR002W  	                                                     
+YFR003C  	                                                     
+YFR004W  	MPR1                                                 
+YFR005C  	                                                     
+YFR027W  	CTF7                                                 
+YFR028C  	OAF3                                                 
+YFR029W  	SSY3                                                 
+YFR031C  	                                                     
+YFR037C  	SWH3                                                 
+YFR042W  	                                                     
+YFR050C  	                                                     
+YFR051C  	                                                     
+YFR052W  	NIN1                                                 
+YGL001C  	                                                     
+YGL008C  	                                                     
+YGL011C  	PRC2                                                 
+YGL018C  	                                                     
+YGL022W  	                                                     
+YGL030W  	                                                     
+YGL040C  	SLU1                                                 
+YGL044C  	                                                     
+YGL044C  	                                                     
+YGL047W  	                                                     
+YGL048C  	"SUG1, SCB68, CRL3, CIM3                              "
+YGL055W  	MDM2                                                 
+YGL061C  	                                                     
+YGL065C  	                                                     
+YGL068W  	                                                     
+YGL069C  	SRF3                                                 
+YGL073W  	"MAS3, EXA3                                           "
+YGL074C  	                                                     
+YGL075C  	MMC1                                                 
+YGL091C  	                                                     
+YGL092W  	RAT10                                                
+YGL093W  	                                                     
+YGL097W  	"PRP20, MTR1                                          "
+YGL097W  	"PRP20, MTR1                                          "
+YGL098W  	SLT1                                                 
+YGL099W  	KRE35                                                
+YGL102C  	                                                     
+YGL103W  	CYH2                                                 
+YGL111W  	                                                     
+YGL112C  	TAF60                                                
+YGL113W  	                                                     
+YGL116W  	PAC5                                                 
+YGL120C  	JA1                                                  
+YGL122C  	                                                     
+YGL123W  	"SUP138, SUP44, SUP38, RPS4                           "
+YGL128C  	                                                     
+YGL130W  	                                                     
+YGL137W  	                                                     
+YGL142C  	                                                     
+YGL145W  	TIP1                                                 
+YGL145W  	TIP1                                                 
+YGL150C  	                                                     
+YGL155W  	CAL1                                                 
+YGL169W  	                                                     
+YGL171W  	                                                     
+YGL172W  	NSP49                                                
+YGL201C  	                                                     
+YGL207W  	"SSF1, CDC68                                          "
+YGL225W  	"VIG4, LDB3, GOG5, VAN2                               "
+YGL233W  	                                                     
+YGL238W  	KAP109                                               
+YGL239C  	                                                     
+YGL239C  	                                                     
+YGL245W  	GSN1                                                 
+YGL247W  	                                                     
+YGR002C  	"GOD1, EAF2                                           "
+YGR005C  	                                                     
+YGR009C  	HSS7                                                 
+YGR013W  	                                                     
+YGR024C  	                                                     
+YGR029W  	                                                     
+YGR029W  	                                                     
+YGR030C  	                                                     
+YGR046W  	MMP37                                                
+YGR047C  	PCF1                                                 
+YGR048W  	                                                     
+YGR060W  	                                                     
+YGR065C  	                                                     
+YGR073C  	                                                     
+YGR074W  	SPP92                                                
+YGR075C  	                                                     
+YGR082W  	"MOM19, MAS20                                         "
+YGR083C  	GCD12                                                
+YGR090W  	                                                     
+YGR091W  	                                                     
+YGR094W  	                                                     
+YGR095C  	                                                     
+YGR098C  	                                                     
+YGR099W  	                                                     
+YGR103W  	YPH1                                                 
+YGR113W  	                                                     
+YGR114C  	                                                     
+YGR115C  	                                                     
+YGR116W  	"SSN20, CRE2                                          "
+YGR119C  	                                                     
+YGR120C  	SEC35                                                
+YGR128C  	                                                     
+YGR140W  	"CSL5, NDC10, CTF14, CEP2, CBF3A                      "
+YGR145W  	                                                     
+YGR147C  	                                                     
+YGR156W  	                                                     
+YGR158C  	                                                     
+YGR172C  	                                                     
+YGR175C  	                                                     
+YGR179C  	                                                     
+YGR185C  	"TyrRS, TTS1                                          "
+YGR186W  	"RAP74, SSU71                                         "
+YGR190C  	                                                     
+YGR191W  	                                                     
+YGR195W  	"RRP41, ECM20                                         "
+YGR198W  	                                                     
+YGR211W  	                                                     
+YGR216C  	                                                     
+YGR218W  	"XPO1, KAP124                                         "
+YGR245C  	                                                     
+YGR246C  	"TDS4, PCF4                                           "
+YGR251W  	                                                     
+YGR253C  	DOA5                                                 
+YGR264C  	MESI                                                 
+YGR265W  	                                                     
+YGR267C  	                                                     
+YGR274C  	"TAF145, TAF130                                       "
+YGR277C  	                                                     
+YGR278W  	                                                     
+YGR280C  	GNO1                                                 
+YHL015W  	URP2                                                 
+YHR005C-A	TIM10                                                
+YHR007C  	CYP51                                                
+YHR019C  	                                                     
+YHR020W  	                                                     
+YHR023W  	                                                     
+YHR024C  	MIF2                                                 
+YHR036W  	                                                     
+YHR040W  	                                                     
+YHR042W  	CPR1                                                 
+YHR058C  	                                                     
+YHR062C  	                                                     
+YHR065C  	                                                     
+YHR068W  	                                                     
+YHR069C  	                                                     
+YHR070W  	                                                     
+YHR072W  	                                                     
+YHR072W-A	                                                     
+YHR074W  	                                                     
+YHR083W  	"TOM38, TOB38, FMP20                                  "
+YHR085W  	                                                     
+YHR088W  	                                                     
+YHR088W  	                                                     
+YHR089C  	                                                     
+YHR101C  	                                                     
+YHR102W  	NRK1                                                 
+YHR107C  	"PSL7, CLA10                                          "
+YHR118C  	                                                     
+YHR122W  	                                                     
+YHR128W  	                                                     
+YHR143W-A	RPB12                                                
+YHR148W  	                                                     
+YHR164C  	WEB2                                                 
+YHR165C  	"USA2, SLT21, RNA8, DNA39, DBF3                      "
+YHR166C  	                                                     
+YHR169W  	                                                     
+YHR170W  	SRC5                                                 
+YHR172W  	                                                     
+YHR186C  	LAS24                                                
+YHR188C  	                                                     
+YHR188C  	                                                     
+YHR190W  	                                                     
+YHR196W  	                                                     
+YHR197W  	IPI2                                                 
+YHR197W  	IPI2                                                 
+YHR199C-A	                                                     
+YIL003W  	DRE3                                                 
+YIL004C  	SLY12                                                
+YIL019W  	                                                     
+YIL021W  	                                                     
+YIL022W  	"MPI1, MIM44, ISP45                                   "
+YIL026C  	SCC3                                                 
+YIL031W  	SMT4                                                 
+YIL046W  	ZRG11                                                
+YIL048W  	                                                     
+YIL051C  	IBM1                                                 
+YIL061C  	                                                     
+YIL062C  	                                                     
+YIL063C  	                                                     
+YIL068C  	                                                     
+YIL075C  	SEN3                                                 
+YIL078W  	                                                     
+YIL083C  	                                                     
+YIL091C  	                                                     
+YIL104C  	                                                     
+YIL106W  	                                                     
+YIL106W  	                                                     
+YIL109C  	ANU1                                                 
+YIL115C  	"RAT7, NUP158                                         "
+YIL118W  	                                                     
+YIL126W  	NPS1                                                 
+YIL129C  	PAG1                                                 
+YIL142W  	"TCP2, BIN3                                           "
+YIL143C  	"RAD25, LOM3                                          "
+YIL144W  	"HEC1, NDC80                                          "
+YIL147C  	YPD2                                                 
+YIL150C  	DNA43                                                
+YIL171W  	HXT12                                                
+YIR006C  	"DIM2, MIP3, MDP3                                     "
+YIR008C  	                                                     
+YIR010W  	                                                     
+YIR011C  	"SSM5, DBF8                                           "
+YIR012W  	                                                     
+YIR015W  	                                                     
+YIR022W  	                                                     
+YJL001W  	CRL21                                                
+YJL002C  	NLT1                                                 
+YJL005W  	"FIL1, TSM0185, SRA4, HSR1, CDC35                     "
+YJL008C  	                                                     
+YJL008C  	                                                     
+YJL009W  	                                                     
+YJL010C  	                                                     
+YJL011C  	                                                     
+YJL014W  	"TCP3, BIN2                                           "
+YJL015C  	                                                     
+YJL018W  	                                                     
+YJL019W  	"YJL018W, NEP98                                       "
+YJL025W  	                                                     
+YJL026W  	CRT6                                                 
+YJL031C  	                                                     
+YJL032W  	                                                     
+YJL033W  	"ECM24, DBP4                                          "
+YJL034W  	GRP78                                                
+YJL035C  	                                                     
+YJL039C  	                                                     
+YJL041W  	                                                     
+YJL050W  	DOB1                                                 
+YJL054W  	                                                     
+YJL061W  	HRB187                                               
+YJL069C  	                                                     
+YJL072C  	CDC102                                               
+YJL074C  	                                                     
+YJL076W  	"SRM8, CFI1, ESC5                                     "
+YJL081C  	ACT3                                                 
+YJL085W  	                                                     
+YJL086C  	                                                     
+YJL087C  	"RLG1, LIG1                                           "
+YJL090C  	                                                     
+YJL091C  	                                                     
+YJL097W  	                                                     
+YJL104W  	"TIM16, MIA1                                          "
+YJL109C  	                                                     
+YJL111W  	TCP7                                                 
+YJL125C  	TRM61                                                
+YJL143W  	"SMS1, MPI2, MIM17                                    "
+YJL156C  	                                                     
+YJL167W  	"FPP1, FDS1, BOT3                                     "
+YJL173C  	                                                     
+YJL174W  	                                                     
+YJL194W  	                                                     
+YJL195C  	                                                     
+YJL195C  	                                                     
+YJL202C  	                                                     
+YJL202C  	                                                     
+YJL203W  	SPP91                                                
+YJR002W  	                                                     
+YJR006W  	"SDP5, POL31, HUS2                                    "
+YJR007W  	                                                     
+YJR012C  	                                                     
+YJR013W  	PMH1                                                 
+YJR016C  	                                                     
+YJR017C  	"PIN1, PTF1                                           "
+YJR022W  	                                                     
+YJR023C  	                                                     
+YJR041C  	NPA2                                                 
+YJR042W  	RAT9                                                 
+YJR045C  	"mtHSP70, ENS1                                        "
+YJR046W  	"CDT1, SID2                                           "
+YJR046W  	"CDT1, SID2                                           "
+YJR057W  	                                                     
+YJR064W  	TCP5                                                 
+YJR065C  	ACT4                                                 
+YJR067C  	                                                     
+YJR068W  	                                                     
+YJR072C  	EPA1                                                 
+YJR076C  	PSL9                                                 
+YJR089W  	                                                     
+YJR093C  	                                                     
+YJR112W  	                                                     
+YJR123W  	                                                     
+YJR141W  	                                                     
+YKL004W  	                                                     
+YKL006C-A	                                                     
+YKL012W  	                                                     
+YKL013C  	                                                     
+YKL014C  	NPA1                                                 
+YKL018W  	"SAF37, CPS35                                         "
+YKL019W  	                                                     
+YKL021C  	                                                     
+YKL022C  	                                                     
+YKL024C  	SOC8                                                 
+YKL028W  	                                                     
+YKL033W  	FMP47                                                
+YKL035W  	                                                     
+YKL036C  	                                                     
+YKL042W  	                                                     
+YKL045W  	                                                     
+YKL049C  	CSL2                                                 
+YKL049C  	CSL2                                                 
+YKL052C  	                                                     
+YKL058W  	                                                     
+YKL059C  	                                                     
+YKL060C  	LOT1                                                 
+YKL078W  	                                                     
+YKL082C  	                                                     
+YKL083W  	                                                     
+YKL088W  	                                                     
+YKL089W  	                                                     
+YKL095W  	CWC16                                                
+YKL099C  	                                                     
+YKL104C  	                                                     
+YKL108W  	DRC1                                                 
+YKL111C  	                                                     
+YKL112W  	"SBF1, REB2, OBF1, BAF1                               "
+YKL122C  	                                                     
+YKL125W  	                                                     
+YKL138C-A	                                                     
+YKL141W  	"YKL4, CYB3                                           "
+YKL144C  	YKL1                                                 
+YKL145W  	"YTA3, CIM5                                           "
+YKL152C  	                                                     
+YKL153W  	                                                     
+YKL154W  	                                                     
+YKL165C  	"FSR2, SSU21, ZRG16                                   "
+YKL172W  	                                                     
+YKL172W  	                                                     
+YKL173W  	GIN10                                                
+YKL180W  	RPL17                                                
+YKL182W  	                                                     
+YKL186C  	                                                     
+YKL189W  	                                                     
+YKL192C  	                                                     
+YKL193C  	EGP1                                                 
+YKL195W  	"TIM40, FMP15                                         "
+YKL196C  	                                                     
+YKL203C  	DRR2                                                 
+YKL210W  	                                                     
+YKR002W  	                                                     
+YKR004C  	YKR004C-A                                            
+YKR008W  	                                                     
+YKR022C  	                                                     
+YKR025W  	                                                     
+YKR037C  	                                                     
+YKR038C  	                                                     
+YKR062W  	                                                     
+YKR063C  	                                                     
+YKR068C  	                                                     
+YKR071C  	                                                     
+YKR079C  	                                                     
+YKR081C  	                                                     
+YKR083C  	HSK1                                                 
+YKR086W  	                                                     
+YLL003W  	                                                     
+YLL004W  	                                                     
+YLL008W  	                                                     
+YLL011W  	                                                     
+YLL018C  	                                                     
+YLL031C  	MPC1                                                 
+YLL034C  	                                                     
+YLL035W  	                                                     
+YLL036C  	PSO4                                                 
+YLL037W  	                                                     
+YLL050C  	                                                     
+YLR002C  	                                                     
+YLR005W  	                                                     
+YLR007W  	                                                     
+YLR008C  	TIM14                                                
+YLR009W  	                                                     
+YLR010C  	                                                     
+YLR022C  	                                                     
+YLR026C  	                                                     
+YLR029C  	RPL10A                                               
+YLR033W  	                                                     
+YLR045C  	                                                     
+YLR051C  	                                                     
+YLR060W  	                                                     
+YLR066W  	                                                     
+YLR071C  	MED14                                                
+YLR075W  	"QSR1, GRC5                                           "
+YLR076C  	                                                     
+YLR078C  	SEC32                                                
+YLR086W  	                                                     
+YLR088W  	END2                                                 
+YLR099W-A	                                                     
+YLR100W  	                                                     
+YLR101C  	                                                     
+YLR103C  	SLD4                                                 
+YLR105C  	                                                     
+YLR106C  	REA1                                                 
+YLR115W  	YDH1                                                 
+YLR116W  	                                                     
+YLR117C  	"NTC77, SYF3                                          "
+YLR127C  	RSI1                                                 
+YLR129W  	UTP12                                                
+YLR132C  	                                                     
+YLR140W  	                                                     
+YLR141W  	                                                     
+YLR145W  	                                                     
+YLR147C  	SLT16                                                
+YLR153C  	                                                     
+YLR163C  	MIF1                                                 
+YLR166C  	                                                     
+YLR167W  	"UBI3, RPS37                                          "
+YLR175W  	                                                     
+YLR186W  	NEP1                                                 
+YLR186W  	NEP1                                                 
+YLR195C  	CDC72                                                
+YLR196W  	                                                     
+YLR197W  	NOP56                                                
+YLR198C  	                                                     
+YLR208W  	ANU3                                                 
+YLR212C  	                                                     
+YLR215C  	                                                     
+YLR222C  	                                                     
+YLR223C  	                                                     
+YLR229C  	                                                     
+YLR230W  	                                                     
+YLR243W  	                                                     
+YLR249W  	TEF3                                                 
+YLR259C  	"MIF4, CPN60                                          "
+YLR272C  	LOC7                                                 
+YLR274W  	"MCM5, BOB1                                           "
+YLR275W  	                                                     
+YLR276C  	                                                     
+YLR277C  	BRR5                                                 
+YLR291C  	                                                     
+YLR293C  	"CST17, CNR1                                          "
+YLR298C  	                                                     
+YLR305C  	                                                     
+YLR310C  	"CDC25', CTN1                                         "
+YLR314C  	                                                     
+YLR316C  	                                                     
+YLR316C  	                                                     
+YLR317W  	                                                     
+YLR321C  	                                                     
+YLR323C  	                                                     
+YLR336C  	                                                     
+YLR339C  	                                                     
+YLR340W  	RPL10E                                               
+YLR347C  	RSL1                                                 
+YLR355C  	                                                     
+YLR359W  	"BRA8, BRA1                                           "
+YLR378C  	                                                     
+YLR379W  	                                                     
+YLR383W  	RHC18                                                
+YLR397C  	DRG1                                                 
+YLR409C  	                                                     
+YLR424W  	"NTR1, CCF8                                           "
+YLR430W  	"NRD2, CIK3                                           "
+YLR438C-A	"USS2, SMX4                                           "
+YLR440C  	                                                     
+YLR457C  	                                                     
+YLR458W  	                                                     
+YLR459W  	CDC91                                                
+YML010W  	                                                     
+YML015C  	TAF40                                                
+YML015C  	TAF40                                                
+YML023C  	                                                     
+YML023C  	                                                     
+YML025C  	                                                     
+YML031W  	                                                     
+YML043C  	                                                     
+YML046W  	                                                     
+YML049C  	                                                     
+YML064C  	                                                     
+YML065W  	                                                     
+YML069W  	                                                     
+YML077W  	                                                     
+YML085C  	                                                     
+YML091C  	                                                     
+YML092C  	                                                     
+YML092C  	                                                     
+YML093W  	                                                     
+YML098W  	"TAF19, FUN81                                         "
+YML105C  	                                                     
+YML114C  	TAF65                                                
+YML125C  	                                                     
+YML126C  	HMGS                                                 
+YML127W  	                                                     
+YML130C  	                                                     
+YMR001C  	"PKX2, MSD2                                           "
+YMR005W  	"MPT1, TSG2, TAF48                                    "
+YMR005W  	"MPT1, TSG2, TAF48                                    "
+YMR013C  	                                                     
+YMR028W  	                                                     
+YMR033W  	"RSC12, SWP59                                         "
+YMR033W  	"RSC12, SWP59                                         "
+YMR043W  	FUN80                                                
+YMR047C  	NSP116                                               
+YMR047C  	NSP116                                               
+YMR049C  	                                                     
+YMR059W  	                                                     
+YMR059W  	                                                     
+YMR061W  	                                                     
+YMR076C  	                                                     
+YMR079W  	PIT1                                                 
+YMR093W  	                                                     
+YMR094W  	CBF3C                                                
+YMR108W  	"THI1, SMR1                                           "
+YMR108W  	"THI1, SMR1                                           "
+YMR112C  	                                                     
+YMR113W  	                                                     
+YMR117C  	                                                     
+YMR128W  	DHR1                                                 
+YMR131C  	                                                     
+YMR134W  	                                                     
+YMR146C  	                                                     
+YMR149W  	                                                     
+YMR168C  	"CSL1, CBF3B, CBF3                                    "
+YMR197C  	                                                     
+YMR200W  	                                                     
+YMR203W  	"MOM38, ISP42                                         "
+YMR208W  	RAR1                                                 
+YMR211W  	                                                     
+YMR213W  	NTC85                                                
+YMR218C  	                                                     
+YMR220W  	                                                     
+YMR227C  	TAF67                                                
+YMR229C  	                                                     
+YMR235C  	                                                     
+YMR236W  	TAF17                                                
+YMR239C  	                                                     
+YMR240C  	                                                     
+YMR260C  	                                                     
+YMR268C  	                                                     
+YMR270C  	                                                     
+YMR277W  	                                                     
+YMR281W  	                                                     
+YMR288W  	                                                     
+YMR290C  	                                                     
+YMR290W-A	                                                     
+YMR296C  	"TSC2, END8                                           "
+YMR298W  	                                                     
+YMR301C  	                                                     
+YMR308C  	KAP121                                               
+YMR309C  	                                                     
+YMR314W  	                                                     
+YNL002C  	RPL7                                                 
+YNL006W  	                                                     
+YNL007C  	                                                     
+YNL024C-A	                                                     
+YNL026W  	"TOB55, OMP85                                         "
+YNL036W  	NCE3                                                 
+YNL038W  	                                                     
+YNL039W  	TFC5                                                 
+YNL061W  	YNA1                                                 
+YNL062C  	TRM6                                                 
+YNL075W  	                                                     
+YNL088W  	"TRF3, TOR3                                           "
+YNL102W  	"HPR3, CRT5, CDC17                                    "
+YNL103W  	                                                     
+YNL110C  	                                                     
+YNL112W  	                                                     
+YNL112W  	                                                     
+YNL113W  	                                                     
+YNL114C  	                                                     
+YNL118C  	PSU1                                                 
+YNL124W  	                                                     
+YNL126W  	                                                     
+YNL126W  	                                                     
+YNL131W  	"MOM22, MAS22, MAS17                                  "
+YNL132W  	                                                     
+YNL137C  	MNA6                                                 
+YNL138W-A	RCP10                                                
+YNL149C  	                                                     
+YNL150W  	                                                     
+YNL151C  	"RPC8, ACP2                                           "
+YNL152W  	                                                     
+YNL158W  	                                                     
+YNL161W  	                                                     
+YNL163C  	EFL1                                                 
+YNL172W  	                                                     
+YNL178W  	SUF14                                                
+YNL181W  	                                                     
+YNL182C  	                                                     
+YNL188W  	                                                     
+YNL189W  	"SCM1, KAP60                                          "
+YNL207W  	                                                     
+YNL216W  	"TUF1, TBA1, GRF1                                     "
+YNL221C  	                                                     
+YNL222W  	                                                     
+YNL232W  	SKI4                                                 
+YNL240C  	                                                     
+YNL244C  	"RFR1, MOF2                                           "
+YNL245C  	                                                     
+YNL247W  	                                                     
+YNL251C  	                                                     
+YNL256W  	                                                     
+YNL258C  	                                                     
+YNL260C  	                                                     
+YNL261W  	                                                     
+YNL262W  	DUN2                                                 
+YNL263C  	                                                     
+YNL267W  	"PIK120, PIK41                                        "
+YNL272C  	                                                     
+YNL282W  	                                                     
+YNL287W  	                                                     
+YNL290W  	                                                     
+YNL306W  	                                                     
+YNL308C  	                                                     
+YNL310C  	"HEP1, TIM15, FMP28                                   "
+YNL312W  	"RPA2, BUF1                                           "
+YNL313C  	                                                     
+YNL317W  	                                                     
+YNR003C  	                                                     
+YNR011C  	RNA2                                                 
+YNR016C  	"MTR7, FAS3, ABP2                                     "
+YNR017W  	"TIM23, MPI3, MIM23                                   "
+YNR026C  	SED2                                                 
+YNR035C  	END9                                                 
+YNR038W  	                                                     
+YNR043W  	ERG19                                                
+YNR046W  	                                                     
+YNR053C  	                                                     
+YNR054C  	ABT1                                                 
+YOL005C  	                                                     
+YOL010W  	                                                     
+YOL021C  	RRP44                                                
+YOL022C  	                                                     
+YOL026C  	TOM13                                                
+YOL034W  	                                                     
+YOL038W  	                                                     
+YOL040C  	RPS21                                                
+YOL066C  	PUS8                                                 
+YOL069W  	                                                     
+YOL077C  	                                                     
+YOL078W  	                                                     
+YOL094C  	                                                     
+YOL097C  	HRE342                                               
+YOL102C  	                                                     
+YOL120C  	RP28A                                                
+YOL123W  	"NAB5, NAB4                                           "
+YOL127W  	                                                     
+YOL130W  	SWC3                                                 
+YOL133W  	"HRT2, ROC1, RBX1                                     "
+YOL134C  	                                                     
+YOL135C  	                                                     
+YOL139C  	TIF45                                                
+YOL142W  	                                                     
+YOL144W  	                                                     
+YOL146W  	                                                     
+YOL149W  	                                                     
+YOR004W  	                                                     
+YOR020C  	CPN10                                                
+YOR046C  	RAT8                                                 
+YOR048C  	"XRN2, TAP1, HKE1                                     "
+YOR056C  	YOR29-07                                             
+YOR057W  	YOR29-08                                             
+YOR060C  	YOR29-11                                             
+YOR063W  	"YOR29-14, TCM1, MAK8                                 "
+YOR074C  	"YOR29-25, TMP1, CRT9                                 "
+YOR075W  	YOR29-26                                             
+YOR077W  	YOR29-28                                             
+YOR095C  	                                                     
+YOR098C  	                                                     
+YOR102W  	                                                     
+YOR103C  	                                                     
+YOR110W  	                                                     
+YOR116C  	"RPC160, RPC1                                         "
+YOR117W  	YTA1                                                 
+YOR119C  	RRP10                                                
+YOR122C  	PRF1                                                 
+YOR143C  	                                                     
+YOR145C  	"RRP20, DIM2                                          "
+YOR146W  	                                                     
+YOR148C  	                                                     
+YOR149C  	"SAP2, LAS2                                           "
+YOR151C  	"SOH2, SIT2, RPO22, RPB150                            "
+YOR157C  	                                                     
+YOR159C  	                                                     
+YOR160W  	KAP111                                               
+YOR168W  	                                                     
+YOR169C  	                                                     
+YOR174W  	                                                     
+YOR176W  	                                                     
+YOR181W  	BEE1                                                 
+YOR194C  	                                                     
+YOR203W  	                                                     
+YOR204W  	SPP81                                                
+YOR206W  	                                                     
+YOR207C  	"RPC128, RPC2, PDS2                                   "
+YOR210W  	                                                     
+YOR217W  	CDC44                                                
+YOR218C  	                                                     
+YOR224C  	                                                     
+YOR232W  	"GRPE, YGE1                                           "
+YOR236W  	                                                     
+YOR244W  	TAS1                                                 
+YOR249C  	RMC1                                                 
+YOR250C  	                                                     
+YOR254C  	PTL1                                                 
+YOR256C  	                                                     
+YOR257W  	DSK1                                                 
+YOR259C  	"SUG2, PCS1, CRL13                                    "
+YOR260W  	TRA3                                                 
+YOR261C  	                                                     
+YOR262W  	                                                     
+YOR272W  	                                                     
+YOR278W  	SLU2                                                 
+YOR281C  	                                                     
+YOR282W  	                                                     
+YOR287C  	                                                     
+YOR294W  	                                                     
+YOR310C  	NOP5                                                 
+YOR319W  	                                                     
+YOR326W  	CDC66                                                
+YOR329C  	FTB1                                                 
+YOR335C  	CDC64                                                
+YOR336W  	                                                     
+YOR340C  	                                                     
+YOR341W  	RRN1                                                 
+YOR353C  	                                                     
+YOR361C  	"DNA26, CDC63                                         "
+YOR362C  	                                                     
+YOR370C  	MSI4                                                 
+YOR372C  	                                                     
+YOR373W  	                                                     
+YPL007C  	                                                     
+YPL010W  	                                                     
+YPL011C  	TAF47                                                
+YPL012W  	                                                     
+YPL016W  	"LPA1, GAM3, ADR6                                     "
+YPL020C  	NIB1                                                 
+YPL028W  	"TSM0115, LPB3                                        "
+YPL043W  	NOP77                                                
+YPL044C  	                                                     
+YPL063W  	                                                     
+YPL076W  	GCR4                                                 
+YPL082C  	"BTAF1, LPF4, BUR3                                    "
+YPL083C  	                                                     
+YPL085W  	LPF1                                                 
+YPL093W  	                                                     
+YPL094C  	LPG14                                                
+YPL117C  	"LPH10, BOT2                                          "
+YPL122C  	                                                     
+YPL124W  	"NIP29, LPH3                                          "
+YPL126W  	UTP17                                                
+YPL128C  	LPI16                                                
+YPL131W  	"RPL1, LPI14                                          "
+YPL142C  	                                                     
+YPL143W  	RPL37A                                               
+YPL146C  	RRP16                                                
+YPL151C  	NTC50                                                
+YPL153C  	"SPK1, MEC2, LSD1                                     "
+YPL160W  	                                                     
+YPL169C  	                                                     
+YPL175W  	"GPI3, CWH6                                           "
+YPL190C  	HMD1                                                 
+YPL204W  	                                                     
+YPL209C  	PAC15                                                
+YPL210C  	                                                     
+YPL211W  	                                                     
+YPL217C  	                                                     
+YPL218W  	                                                     
+YPL228W  	CES5                                                 
+YPL231W  	                                                     
+YPL233W  	                                                     
+YPL235W  	"TIP49, TIH2, TIP49B                                  "
+YPL237W  	                                                     
+YPL238C  	                                                     
+YPL242C  	CYK1                                                 
+YPL243W  	                                                     
+YPL251W  	                                                     
+YPL252C  	                                                     
+YPL255W  	                                                     
+YPL266W  	CDH1                                                 
+YPR010C  	"SRP3, RRN2, RPA2                                     "
+YPR016C  	CDC95                                                
+YPR019W  	"MCM4, HCD21                                          "
+YPR025C  	                                                     
+YPR033C  	TSM4572                                              
+YPR034W  	"RSC11, SWP61                                         "
+YPR035W  	                                                     
+YPR041W  	SUI5                                                 
+YPR048W  	                                                     
+YPR055W  	                                                     
+YPR056W  	                                                     
+YPR082C  	SNU16                                                
+YPR085C  	                                                     
+YPR086W  	SOH4                                                 
+YPR088C  	SRH1                                                 
+YPR094W  	                                                     
+YPR103W  	"SRR2, PRG1, DOA3                                     "
+YPR104C  	                                                     
+YPR105C  	"SGF1, SEC38, COD1                                    "
+YPR107C  	                                                     
+YPR108W  	                                                     
+YPR110C  	RPC5                                                 
+YPR112C  	                                                     
+YPR113W  	                                                     
+YPR133C  	IWS1                                                 
+YPR136C  	                                                     
+YPR137W  	                                                     
+YPR142C  	                                                     
+YPR143W  	                                                     
+YPR144C  	UTP19                                                
+YPR161C  	BUR1                                                 
+YPR162C  	                                                     
+YPR165W  	                                                     
+YPR168W  	MED10                                                
+YPR169W  	                                                     
+YPR175W  	                                                     
+YPR176C  	                                                     
+YPR177C  	                                                     
+YPR178W  	RNA4                                                 
+YPR180W  	RHC31                                                
+YPR181C  	                                                     
+YPR182W  	                                                     
+YPR183W  	SED3                                                 
+YPR186C  	TFC2                                                 
+YPR187W  	RPB6                                                 
+YPR190C  	RPC3                                                 
