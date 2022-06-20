@@ -1,5 +1,16 @@
-%% 1.- Set case-specific variables
+%% 1.- Clone GitHub repositories and load ecModel
 clear
+%Probably point to specific versions (the same of the publication)
+cd method
+git clone --quiet --depth=1 https://github.com/SysBioChalmers/GECKO.git
+cd ..
+%ecModels catalogue
+git clone --quiet --depth=1 https://github.com/SysBioChalmers/ecModels.git
+
+%% 2.- load ecYeastGEM 
+load(['ecModels/ecYeastGEM/model/' model_name '_batch.mat'])
+ecModel = ecModel_batch;
+%% 3.- Set case-specific variables
 %Indicate carbon source uptake reaction name
 c_source   = 'D-glucose exchange (reversible)';
 %Indicate carbon source mol. weight in grams/mmol
@@ -16,18 +27,9 @@ product_name = '2-phenylethanol';
 results_tag    = '2_phenylethanol';
 results_folder = ['../../results/' results_tag '_targets'];
 mkdir(results_folder)
-%% 2.- Clone GitHub repositories and load ecModel
 
-%Probably point to specific versions (the same of the publication)
-cd method
-git clone --quiet --depth=1 https://github.com/SysBioChalmers/GECKO.git
-cd ..
-%ecModels catalogue
-git clone --quiet --depth=1 https://github.com/SysBioChalmers/ecModels.git
-%load wild-type ecModel
-load(['ecModels/' model_name '/model/' model_name '_batch.mat'])
-ecModel = ecModel_batch;
-%% 3.- Generate production model
+%% 4.- Identify production target and verify production
+
 %Check presence of product in ecModel.metNames
 prod_pos = find(strcmpi(ecModel.metNames,product_name));
 %get extracellular compartment Index
@@ -65,12 +67,21 @@ if ~isempty(prod_pos)
 else
     error('Your provided product is not part of the used ecModel metabolites list')
 end
+%Open all exchanges
+[~,exch_rxns] = getExchangeRxns(ecModel,'out');
+prod_ecModel.ub(exch_rxns) = 1000;
+[~,exch_rxns] = getExchangeRxns(prod_ecModel,'in');
+prod_ecModel.ub(exch_rxns) = 1000;
+%
+[~,exch_rxns] = getExchangeRxns(ecModel,'out');
+%Check flux through target reacion
+flux = haveFlux(prod_ecModel,1-12,target_pos);
+if flux 
+   disp(['* Your ecModel is suited for production of: ' product_name])
+else
+    error('Your ecModel is not suited for production, please revise your production pathway connectivity')
+end
    
-%% 4.- Check compatibility with the method
-cd method
-prod_ecModel = check_enzyme_fields(prod_ecModel);
-
-
 %% 5.-Set constraints
 
 %Set media conditions for batch growth
@@ -87,36 +98,32 @@ solution = solveLP(const_ecModel,1);
 %Return objective to target production reaction
 %const_ecModel = setParam(const_ecModel,'obj',target_pos,1);
 %Check if model can carry flux for the target rxn
-flux = haveFlux(const_ecModel,1-12,target_pos);
-if flux 
-   disp(['* Your ecModel is suited for production of: ' product_name])
-else
-    error('Your ecModel is not suited for production, please revise your production pathway connectivity')
-end
 
-
-%% 6.- Get max. biomass yield
+% Get max. biomass yield
 WT_yield  = solution.x(growthPos)/(solution.x(CS_index)*CS_MW);
 disp(['* The maximum biomass yield is ' num2str(WT_yield) '[g biomass/g carbon source]']);
 %Obtain a suboptimal yield value to run ecFactory
 expYield = 0.49*WT_yield;
+disp(['* The ecFactory method will scan flux distributions with a fixed biomass yield. spanning from: ' num2str(0.5*expYield) ' to: ' num2str(num2str(2*expYield)) ' g biomass/g glucose]'])
 
-%% 8.- Run Enzyme control analysis
-%Check if model can carry flux for the target rxn
-%Run Enzyme sensitivity analysis
-try
-    %Set suboptimal growth rate as lb, target rxn as objective and
-    %unconstrained glucose uptake
-    tempModel = setParam(const_ecModel,'lb',growthPos,0.5*solution.x(growthPos));
-    tempModel = setParam(tempModel,'obj',target_pos,1);
-    tempModel = setParam(tempModel,'ub',CS_index,1000);
-    ECCs      = getECCs(tempModel,target_pos);
-    writetable(ECCs,['../../results/' results_tag '_targets/' results_tag '_ECCs.txt'],'QuoteStrings',false,'Delimiter','\t')
-catch
-    disp('The model is not suitable for ECC analysis')
-end
+% %% 6.- Run Enzyme control analysis
+% cd method
+% %Run Enzyme sensitivity analysis
+% try
+%     %Set suboptimal growth rate as lb, target rxn as objective and
+%     %unconstrained glucose uptake
+%     tempModel = setParam(const_ecModel,'lb',growthPos,0.5*solution.x(growthPos));
+%     tempModel = setParam(tempModel,'obj',target_pos,1);
+%     tempModel = setParam(tempModel,'ub',CS_index,1000);
+%     ECCs      = getECCs(tempModel,target_pos);
+%     writetable(ECCs,['../../results/' results_tag '_targets/' results_tag '_ECCs.txt'],'QuoteStrings',false,'Delimiter','\t')
+% catch
+%     disp('The model is not suitable for ECC analysis')
+% end
+
 %% 9.- Run ecFactory method
 try
+    const_ecModel = check_enzyme_fields(const_ecModel);
     [optStrain,candidates,step] = ecFactory(const_ecModel,target_rxn,const_ecModel.rxns(CS_index),expYield,CS_MW,results_folder);
     candidates.FCC = zeros(height(candidates),1);
     try
