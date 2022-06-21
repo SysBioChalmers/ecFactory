@@ -1,4 +1,4 @@
-function [mutantStrain,filtered,step] = run_ecFactory(model,rxnTarget,c_source,expYield,CS_MW,resultsFolder)
+function [mutantStrain,filtered,step] = ecFactory(model,rxnTarget,c_source,expYield,CS_MW,resultsFolder)
 mkdir(resultsFolder)
 current      = pwd;
 tol          = 1E-12;
