@@ -1,4 +1,4 @@
-%% 2.- Clone GitHub repositories and load ecModel
+%% 1.- Clone GitHub repositories and load ecModel
 clear
 %Probably point to specific versions (the same of the publication)
 cd method
@@ -11,7 +11,6 @@ load(['ecModels/ecYeastGEM/model/ecYeastGEM_batch.mat'])
 ecModel = ecModel_batch;
 clc
 %% 2.- Set case-specific variables
-
 %Indicate carbon source uptake reaction name
 c_source   = 'D-glucose exchange (reversible)';
 %Indicate carbon source mol. weight in grams/mmol
@@ -25,7 +24,6 @@ product_name = '2-phenylethanol';
 %results folder name
 results_folder = '../../results/2_phenylethanol_targets';
 mkdir(results_folder)
-
 %% 3.- Generate production model
 %Check presence of product in ecModel.metNames
 prod_pos = find(strcmpi(ecModel.metNames,product_name));
@@ -51,7 +49,8 @@ if ~isempty(prod_pos)
     	formula = constructEquations(ecModel,target_pos);
         disp(formula{1})
         prod_ecModel = ecModel;
-    end   
+    end 
+    disp(' ')
     if isempty(target_pos)
        error(['Exchange reaction for ' product_name ' could not be created'])
     else
@@ -59,16 +58,14 @@ if ~isempty(prod_pos)
         prod_ecModel = setParam(prod_ecModel,'obj',target_pos,1);
         disp([ecModel.rxnNames{target_pos} ' has been set as cellular objective'])
     end
+    disp(' ')
 else
     error('Your provided product is not part of the used ecModel metabolites list')
-end
-   
+end 
 %% 4.- Check compatibility with the method
 cd method
 prod_ecModel = check_enzyme_fields(prod_ecModel);
-
 %% 5.-Set constraints
-
 %Set media conditions for batch growth
 const_ecModel = changeMedia_batch(prod_ecModel,c_source,'Min'); %model-specific script
 CS_index      = find(strcmpi(const_ecModel.rxnNames,c_source));
@@ -80,8 +77,6 @@ const_ecModel = setParam(const_ecModel,'ub',growthPos,1000);
 const_ecModel = setParam(const_ecModel,'obj',growthPos,1);
 const_ecModel = setParam(const_ecModel,'ub',CS_index,1);
 solution = solveLP(const_ecModel,1);
-%Return objective to target production reaction
-%const_ecModel = setParam(const_ecModel,'obj',target_pos,1);
 %Check if model can carry flux for the target rxn
 flux = haveFlux(const_ecModel,1-12,target_pos);
 if flux 
@@ -89,25 +84,18 @@ if flux
 else
     error('Your ecModel is not suited for production, please revise your production pathway connectivity')
 end
-
-
-%% 6.- Get max. biomass yield
+disp(' ')
+%% 5.- Get max. biomass yield
 WT_yield  = solution.x(growthPos)/(solution.x(CS_index)*CS_MW);
 disp(['* The maximum biomass yield is ' num2str(WT_yield) '[g biomass/g carbon source]']);
 %Obtain a suboptimal yield value to run ecFactory
 expYield = 0.49*WT_yield;
-
-%% 9.- Run ecFactory method
+disp('* The ecFactory method will scan flux distributions spanning from')
+disp(['a fixed biomass yield of: ' num2str(0.5*expYield) ' to: ' num2str(0.5*expYield) ' [g biomass/g carbon source]']);
+%% 6.- Run ecFactory method
 try
     [optStrain,candidates,step] = ecFactory(const_ecModel,target_rxn,const_ecModel.rxns(CS_index),expYield,CS_MW,results_folder);
     candidates.FCC = zeros(height(candidates),1);
-    try
-        [iA,iB] = ismember(candidates.enzymes,ECCs.enzymes);
-        candidates.FCC(find(iA)) = ECCs.CC(iB);
-        writetable(candidates,[results_folder '/compatible_genes_results.txt'],'Delimiter','\t','QuoteStrings',false);
-    catch
-        disp('No ECCs file available for this case')
-    end
     %Generate transporter targets file (lists a number of transport steps
     %with no enzymatic annotation that are relevant for enhancing target
     %product formation.
