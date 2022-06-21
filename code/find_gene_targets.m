@@ -1,23 +1,5 @@
-%% 1.- Set case-specific variables
-clear
-%Indicate carbon source uptake reaction name
-c_source   = 'D-glucose exchange (reversible)';
-%Indicate carbon source mol. weight in grams/mmol
-CS_MW      = 0.18015;
-%Indicate the name of the growth (or biomass exchange) pseudoreaction
-growth_rxn = 'growth';
-%Indicate the wild-type ecModel file name (from ecModels catalogue) 
-model_name = 'ecYeastGEM';
-%get current directory
-current = pwd;
-%product name provide a product name
-product_name = '2-phenylethanol';
-%results folder name
-results_tag    = '2_phenylethanol';
-results_folder = ['../../results/' results_tag '_targets'];
-mkdir(results_folder)
 %% 2.- Clone GitHub repositories and load ecModel
-
+clear
 %Probably point to specific versions (the same of the publication)
 cd method
 git clone --quiet --depth=1 https://github.com/SysBioChalmers/GECKO.git
@@ -25,8 +7,25 @@ cd ..
 %ecModels catalogue
 git clone --quiet --depth=1 https://github.com/SysBioChalmers/ecModels.git
 %load wild-type ecModel
-load(['ecModels/' model_name '/model/' model_name '_batch.mat'])
+load(['ecModels/ecYeastGEM/model/ecYeastGEM_batch.mat'])
 ecModel = ecModel_batch;
+clc
+%% 2.- Set case-specific variables
+
+%Indicate carbon source uptake reaction name
+c_source   = 'D-glucose exchange (reversible)';
+%Indicate carbon source mol. weight in grams/mmol
+CS_MW      = 0.18015;
+%Indicate the name of the growth (or biomass exchange) pseudoreaction
+growth_rxn = 'growth';
+%get current directory
+current = pwd;
+%product name provide a product name
+product_name = '2-phenylethanol';
+%results folder name
+results_folder = '../../results/2_phenylethanol_targets';
+mkdir(results_folder)
+
 %% 3.- Generate production model
 %Check presence of product in ecModel.metNames
 prod_pos = find(strcmpi(ecModel.metNames,product_name));
@@ -39,8 +38,7 @@ if ~isempty(prod_pos)
     while isempty(target_pos) & i <= numel(prod_pos)     
         target_pos = exch_rxns(ecModel.S(prod_pos(i),exch_rxns)~=0);
         i = i +1;
-    end
-    
+    end    
     if isempty(target_pos)
     	warning(['No exchange reaction was found for: ' product_name])
         %get the extracellular met index
@@ -53,8 +51,7 @@ if ~isempty(prod_pos)
     	formula = constructEquations(ecModel,target_pos);
         disp(formula{1})
         prod_ecModel = ecModel;
-    end
-    
+    end   
     if isempty(target_pos)
        error(['Exchange reaction for ' product_name ' could not be created'])
     else
@@ -69,7 +66,6 @@ end
 %% 4.- Check compatibility with the method
 cd method
 prod_ecModel = check_enzyme_fields(prod_ecModel);
-
 
 %% 5.-Set constraints
 
@@ -101,20 +97,6 @@ disp(['* The maximum biomass yield is ' num2str(WT_yield) '[g biomass/g carbon s
 %Obtain a suboptimal yield value to run ecFactory
 expYield = 0.49*WT_yield;
 
-%% 8.- Run Enzyme control analysis
-%Check if model can carry flux for the target rxn
-%Run Enzyme sensitivity analysis
-try
-    %Set suboptimal growth rate as lb, target rxn as objective and
-    %unconstrained glucose uptake
-    tempModel = setParam(const_ecModel,'lb',growthPos,0.5*solution.x(growthPos));
-    tempModel = setParam(tempModel,'obj',target_pos,1);
-    tempModel = setParam(tempModel,'ub',CS_index,1000);
-    ECCs      = getECCs(tempModel,target_pos);
-    writetable(ECCs,['../../results/' results_tag '_targets/' results_tag '_ECCs.txt'],'QuoteStrings',false,'Delimiter','\t')
-catch
-    disp('The model is not suitable for ECC analysis')
-end
 %% 9.- Run ecFactory method
 try
     [optStrain,candidates,step] = ecFactory(const_ecModel,target_rxn,const_ecModel.rxns(CS_index),expYield,CS_MW,results_folder);
