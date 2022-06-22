@@ -90,7 +90,7 @@ disp(['* The maximum biomass yield is ' num2str(WT_yield) '[g biomass/g carbon s
 %Obtain a suboptimal yield value to run ecFactory
 expYield = 0.49*WT_yield;
 disp('* The ecFactory method will scan flux distributions spanning from')
-disp(['a fixed biomass yield of: ' num2str(0.5*expYield) ' to: ' num2str(0.5*expYield) ' [g biomass/g carbon source]']);
+disp(['a fixed biomass yield of: ' num2str(0.5*expYield) ' to: ' num2str(2**expYield) ' [g biomass/g carbon source]']);
 %% 7.- Run ecFactory method
 % Check compatibility with the method
 const_ecModel = check_enzyme_fields(const_ecModel);
