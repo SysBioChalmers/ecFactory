@@ -1,0 +1,8 @@
+rxn_IDs	rxnNames	K_score	grRules	rxn_formula
+r_1128_REV	citrate transport (reversible)	1000	YBR291C	citrate[m] + isocitrate[c] => citrate[c] + isocitrate[m]
+r_1112_REV	AKG transporter, mitochonrial (reversible)	425.647803392752	YMR241W	2-oxoglutarate[m] + citrate[c] => 2-oxoglutarate[c] + citrate[m]
+r_1127_REV	citrate transport (reversible)	13.4215454204872	YBR291C	citrate[m] + phosphoenolpyruvate[c] => citrate[c] + phosphoenolpyruvate[m]
+r_1194	L-glutamate transport	4.05255581768725	YPR021C	L-glutamate[c] => L-glutamate[m]
+r_1099	2-oxoadipate and 2-oxoglutarate transport	0.29625312352067	YOR222W or YPL134C	2-oxoadipic acid[m] + 2-oxoglutarate[c] => 2-oxoadipic acid[c] + 2-oxoglutarate[m]
+r_3545	L-serine transport, cytoplasm-ER membrane	0.295624238608777	YKR039W	L-serine[c] => L-serine[erm]
+r_2132	oxoglutarate/malate exchange	0.22532308127379	YOR222W or YPL134C	(S)-malate[c] + 2-oxoglutarate[m] => (S)-malate[m] + 2-oxoglutarate[c]
