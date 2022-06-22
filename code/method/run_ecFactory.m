@@ -1,4 +1,4 @@
-function [mutantStrain,filtered,step] = ecFactory(model,rxnTarget,c_source,expYield,CS_MW,resultsFolder)
+function [mutantStrain,filtered,step] = run_ecFactory(model,rxnTarget,c_source,expYield,CS_MW,resultsFolder)
 mkdir(resultsFolder)
 current      = pwd;
 tol          = 1E-12;
@@ -72,7 +72,7 @@ candidates(toRemove,:) = [];
 cd (current)
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
 disp('  ')
-writetable(candidates,[resultsFolder '/candidates_ecFSEOF.txt'],'Delimiter','\t','QuoteStrings',false);
+writetable(candidates,[resultsFolder '/candidates_L1.txt'],'Delimiter','\t','QuoteStrings',false);
 
 % 3.- Enzyme usage variability analysis (EVA) and prioritization of targets
 
@@ -147,7 +147,7 @@ candidates(toRemove,:) = [];
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
 disp('  ')
 %Generate table with FVA results
-writetable(candidates,[resultsFolder '/candidates_enzUsageFVA.txt'],'Delimiter','\t','QuoteStrings',false);
+%writetable(candidates,[resultsFolder '/candidates_enzUsageFVA.txt'],'Delimiter','\t','QuoteStrings',false);
 
 % Assess genes redundancy
 step = step+1;
@@ -202,7 +202,7 @@ disp(' Discard genes with priority level = 0')
 candidates = candidates(candidates.priority>0,:);
 candidates = sortrows(candidates,'priority','ascend');
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
-writetable(candidates,[resultsFolder '/candidates_priority.txt'],'Delimiter','\t','QuoteStrings',false);
+%writetable(candidates,[resultsFolder '/candidates_priority.txt'],'Delimiter','\t','QuoteStrings',false);
 % 5.- Add flux leak targets
 step = step+1;
 disp('  ')
@@ -235,7 +235,7 @@ candidates = candidates(validated,:);
 disp(' Discard gene modifications with a negative impact on product yield or rate')
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
 disp('  ')
-writetable(candidates,[resultsFolder '/candidates_mech_validated.txt'],'Delimiter','\t','QuoteStrings',false);
+writetable(candidates,[resultsFolder '/candidates_L2.txt'],'Delimiter','\t','QuoteStrings',false);
 
 % 7.- Find compatible combinations
 step = step+1;
@@ -257,13 +257,23 @@ if ~isempty(filtered) & istable(filtered)
     actions(filtered.actions==0 & filtered.k_scores>delLimit)= {'KD'};
     actions(filtered.actions>0) = {'OE'};
     filtered.actions = actions;
+    %remove unnecessary columns
+    
     disp([' * ' num2str(height(filtered)) ' gene targets remain'])
     disp('  ')
     %Write final results
-    writetable(filtered,[resultsFolder '/compatible_genes_results.txt'],'Delimiter','\t','QuoteStrings',false);
+    writetable(filtered,[resultsFolder '/candidates_L3.txt'],'Delimiter','\t','QuoteStrings',false);
 end
+%Generate transporter targets file (lists a number of transport steps
+%with no enzymatic annotation that are relevant for enhancing target
+%product formation.
 origin = 'GECKO/geckomat/utilities/ecFSEOF/results/*';
 copyfile(origin,resultsFolder)
+rxnsTable     = readtable([resultsFolder '/rxnsResults_ecFSEOF.txt'],'Delimiter','\t');
+transpTargets = getTransportTargets(rxnsTable,tempModel);
+writetable(transpTargets,[resultsFolder '/transporter_targets.txt'],'Delimiter','\t','QuoteStrings',false);
+delete([resultsFolder '/rxnsResults_ecFSEOF.txt'])
+delete([resultsFolder '/genesResults_ecFSEOF.txt'])
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [FChanges_y,FChanges_p,validated] = testAllmutants(candidates,tempModel,indexes,tol)

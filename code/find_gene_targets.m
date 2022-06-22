@@ -7,7 +7,7 @@ cd ..
 %ecModels catalogue
 git clone --quiet --depth=1 https://github.com/SysBioChalmers/ecModels.git
 %% 2.- load wild-type ecModel
-load(['ecModels/ecYeastGEM/model/ecYeastGEM_batch.mat'])
+load('ecModels/ecYeastGEM/model/ecYeastGEM_batch.mat')
 ecModel = ecModel_batch;
 clc
 %% 3.- Set case-specific variables
@@ -95,17 +95,9 @@ disp(['a fixed biomass yield of: ' num2str(0.5*expYield) ' to: ' num2str(0.5*exp
 % Check compatibility with the method
 const_ecModel = check_enzyme_fields(const_ecModel);
 try
-    [optStrain,candidates,step] = ecFactory(const_ecModel,target_rxn,const_ecModel.rxns(CS_index),expYield,CS_MW,results_folder);
-    candidates.FCC = zeros(height(candidates),1);
-    %Generate transporter targets file (lists a number of transport steps
-    %with no enzymatic annotation that are relevant for enhancing target
-    %product formation.
-    rxnsTable     = readtable([results_folder '/rxnsResults_ecFSEOF.txt'],'Delimiter','\t');
-    transpTargets = getTransportTargets(rxnsTable,tempModel);
-    writetable(transpTargets,[results_folder '/transporter_targets.txt'],'Delimiter','\t','QuoteStrings',false);
-catch
+    [optStrain,candidates,step] = run_ecFactory(const_ecModel,target_rxn,const_ecModel.rxns(CS_index),expYield,CS_MW,results_folder);
+   catch
     disp('The model is not suitable for robust ecFSEOF')
 end
-disp(' ')
 cd (current)
 %%

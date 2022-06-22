@@ -1,6 +1,6 @@
 function [optStrain,optGenes,FChanges,iB] = getOptimalStrain(model,candidates,rxnIndxs,protFlag)
 
-tolerance = 0.001;
+tolerance = 0.0001;
 
 GURindex    = rxnIndxs(1);
 targetIndex = rxnIndxs(2);
