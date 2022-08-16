@@ -9,11 +9,31 @@ step         = 0;
 essential = readtable('../../data/essential_genes.txt','Delimiter','\t');
 essential = strtrim(essential.Ids);
 
+%Get relevant rxn indexes
+targetIndx  = find(strcmpi(model.rxns,rxnTarget));
+CUR_indx    = find(strcmpi(model.rxns,c_source));
+prot_indx   = find(contains(model.rxns,'prot_pool'));
+
+%verification steps
+model = check_enzyme_fields(model);
+if ~isempty(targetIndx)
+    %Check if model can carry flux for the target rxn
+    flux = haveFlux(model,1-12,rxnTarget);
+    if flux
+        disp(['* Your ecModel can carry flux through the reaction: ' model.rxnNames{find(strcmpi(model.rxns,rxnTarget))}])
+    else
+        disp(['* Your ecModel cannot carry flux through the reaction: ' model.rxnNames{find(strcmpi(model.rxns,rxnTarget))} ', please check the applied constraints'])
+    end
+else
+    error('The provided target reaction is not part of the ecModel.rxns field')
+end
+
 cd GECKO
 %Get model parameters
 cd geckomat
-parameters = getModelParameters;
-bioRXN     = parameters.bioRxn;
+parameters  = getModelParameters;
+bioRXN      = parameters.bioRxn;
+growth_indx = find(strcmpi(model.rxns,bioRXN));
 %Parameters for FSEOF method
 Nsteps     = 16;
 alphaLims  = [0.5*expYield 2*expYield];
@@ -79,11 +99,6 @@ writetable(candidates,[resultsFolder '/candidates_L1.txt'],'Delimiter','\t','Quo
 step = step+1;
 disp([num2str(step) '.-  **** Running enzyme usage variability analysis ****'])
 tempModel = model;
-%Get relevant rxn indexes
-targetIndx  = find(strcmpi(tempModel.rxns,rxnTarget));
-CUR_indx    = find(strcmpi(tempModel.rxns,c_source));
-growth_indx = find(strcmpi(tempModel.rxns,bioRXN));
-prot_indx = find(contains(tempModel.rxns,'prot_pool'));
 %Fix suboptimal experimental biomass yield conditions
 V_bio = expYield*CS_MW;
 tempModel.lb(growth_indx) = V_bio;
