@@ -1,4 +1,4 @@
-function [mutantStrain,filtered,step] = run_ecFactory(model,rxnTarget,c_source,expYield,CS_MW,resultsFolder)
+function [mutantStrain,filtered,step] = run_ecFactory(model,modelParam,expYield,resultsFolder)
 mkdir(resultsFolder)
 current      = pwd;
 tol          = 1E-12;
@@ -9,31 +9,27 @@ step         = 0;
 essential = readtable('../../data/essential_genes.txt','Delimiter','\t');
 essential = strtrim(essential.Ids);
 
+
 %Get relevant rxn indexes
-targetIndx  = find(strcmpi(model.rxns,rxnTarget));
-CUR_indx    = find(strcmpi(model.rxns,c_source));
+modelParam.targetIndx  = find(strcmpi(model.rxns,modelParam.rxnTarget));
+CUR_indx    = find(strcmpi(model.rxns,modelParam.CSrxn));
 prot_indx   = find(contains(model.rxns,'prot_pool'));
+growth_indx = find(strcmpi(model.rxns,modelParam.growthRxn));
 
 %verification steps
 model = check_enzyme_fields(model);
-if ~isempty(targetIndx)
+if ~isempty(modelParam.targetIndx)
     %Check if model can carry flux for the target rxn
-    flux = haveFlux(model,1-12,rxnTarget);
+    flux = haveFlux(model,1-12,modelParam.rxnTarget);
     if flux
-        disp(['* Your ecModel can carry flux through the reaction: ' model.rxnNames{find(strcmpi(model.rxns,rxnTarget))}])
+        disp(['* Your ecModel can carry flux through the reaction: ' model.rxnNames{modelParam.targetIndx}])
     else
-        disp(['* Your ecModel cannot carry flux through the reaction: ' model.rxnNames{find(strcmpi(model.rxns,rxnTarget))} ', please check the applied constraints'])
+        disp(['* Your ecModel cannot carry flux through the reaction: ' model.rxnNames{modelParam.targetIndx} ', please check the applied constraints'])
     end
 else
     error('The provided target reaction is not part of the ecModel.rxns field')
 end
 
-cd GECKO
-%Get model parameters
-cd geckomat
-parameters  = getModelParameters;
-bioRXN      = parameters.bioRxn;
-growth_indx = find(strcmpi(model.rxns,bioRXN));
 %Parameters for FSEOF method
 Nsteps     = 16;
 alphaLims  = [0.5*expYield 2*expYield];
@@ -41,11 +37,11 @@ alphaLims  = [0.5*expYield 2*expYield];
 file1   = 'results/genesResults_ecFSEOF.txt';
 file2   = 'results/rxnsResults_ecFSEOF.txt';
 % 1.- Run FSEOF to find gene candidates
-cd utilities/ecFSEOF
+cd GECKO/geckomat/utilities/ecFSEOF
 mkdir('results')
 step = step+1;
 disp([num2str(step) '.-  **** Running ecFSEOF method (from GECKO utilities) ****'])
-results = run_ecFSEOF(model,rxnTarget,c_source,alphaLims,Nsteps,file1,file2);
+results = run_ecFSEOF(model,modelParam.rxnTarget,modelParam.CSrxn,alphaLims,Nsteps,file1,file2);
 genes   = results.geneTable(:,1);
 disp('  ')
 disp(['ecFSEOF yielded ' num2str(length(genes)) ' targets'])
@@ -100,18 +96,18 @@ step = step+1;
 disp([num2str(step) '.-  **** Running enzyme usage variability analysis ****'])
 tempModel = model;
 %Fix suboptimal experimental biomass yield conditions
-V_bio = expYield*CS_MW;
+V_bio = expYield*modelParam.CS_MW;
 tempModel.lb(growth_indx) = V_bio;
 %Fix unit C source uptake
 tempModel.lb(CUR_indx) = (1-tol)*1;
 tempModel.ub(CUR_indx) = (1+tol)*1;
 %Get and fix optimal production rate
-tempModel = setParam(tempModel, 'obj', targetIndx, +1);
+tempModel = setParam(tempModel, 'obj', modelParam.targetIndx, +1);
 sol       = solveLP(tempModel,1);
-WT_prod   = sol.x(targetIndx);
+WT_prod   = sol.x(modelParam.targetIndx);
 WT_CUR    = sol.x(CUR_indx);
-tempModel.lb(targetIndx) = (1-tol)*WT_prod;
-tempModel.ub(targetIndx) = (1+tol)*WT_prod;
+tempModel.lb(modelParam.targetIndx) = (1-tol)*WT_prod;
+tempModel.ub(modelParam.targetIndx) = (1+tol)*WT_prod;
 %Run FVA for all enzyme usages subject to fixed CUR and Grates
 FVAtable = enzymeUsage_FVA(tempModel,candidates.enzymes);
 %sort results
@@ -222,7 +218,7 @@ disp([' * ' num2str(height(candidates)) ' gene targets remain'])
 step = step+1;
 disp('  ')
 disp([num2str(step) '.-  **** Find flux leak targets to block ****'])
-candidates = find_flux_leaks(candidates,targetIndx,tempModel);
+candidates = find_flux_leaks(candidates,modelParam.targetIndx,tempModel);
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
 
 % 6.- Mechanistic validations of FSEOF results
@@ -230,19 +226,19 @@ step = step+1;
 disp('  ')
 disp([num2str(step) '.-  **** Mechanistic validation of results ****'])
 %Relevant rxn indexes
-relIndexes = [CUR_indx, targetIndx, growth_indx];
+relIndexes = [CUR_indx, modelParam.targetIndx, growth_indx];
 %relax target rxn bounds
-tempModel.lb(targetIndx) = (1-tol)*WT_prod;
-tempModel.ub(targetIndx) = 1000;
+tempModel.lb(modelParam.targetIndx) = (1-tol)*WT_prod;
+tempModel.ub(modelParam.targetIndx) = 1000;
 %Unconstrain CUR and biomass formation
 tempModel = setParam(tempModel,'ub',CUR_indx,1000);
 tempModel = setParam(tempModel,'lb',CUR_indx,0);
 tempModel = setParam(tempModel,'ub',growth_indx,1000);
 tempModel = setParam(tempModel,'lb',growth_indx,0);
 %set Max product formation as objective function
-tempModel = setParam(tempModel,'obj',targetIndx,+1);
+tempModel = setParam(tempModel,'obj',modelParam.targetIndx,+1);
 %Run mechanistic validation of targets
-[FCs_y,FCs_p,validated]  = testAllmutants(candidates,tempModel,relIndexes);
+[FCs_y,FCs_p,validated]  = testMutants(candidates,tempModel,relIndexes);
 %Discard genes with a negative impact on production yield
 candidates.foldChange_yield = FCs_y; 
 candidates.foldChange_pRate = FCs_p; 
@@ -259,7 +255,7 @@ disp('  ')
 % get optimal strain according to priority candidates
 disp(' Constructing optimal strain')
 disp(' ')
-[mutantStrain,filtered] = getOptimalStrain(tempModel,candidates,[CUR_indx targetIndx growth_indx prot_indx],false);
+[mutantStrain,filtered] = getOptimalStrain(tempModel,candidates,[CUR_indx modelParam.targetIndx growth_indx prot_indx],false);
 cd (current) 
 if ~isempty(filtered) & istable(filtered)
     disp(' ')
@@ -290,71 +286,3 @@ writetable(transpTargets,[resultsFolder '/transporter_targets.txt'],'Delimiter',
 delete([resultsFolder '/rxnsResults_ecFSEOF.txt'])
 delete([resultsFolder '/genesResults_ecFSEOF.txt'])
 end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [FChanges_y,FChanges_p,validated] = testAllmutants(candidates,tempModel,indexes,tol)
-if nargin<4
-    tol = 1E-9;
-end
-FChanges_y = [];
-FChanges_p = [];
-CUR_indx    = indexes(1);
-targetIndx  = indexes(2);
-growth_indx = indexes(3);
-%Index to minimize (bi-level optimization)
-minIndex  = find(contains(tempModel.rxnNames,'prot_pool'));
-tempModel = setParam(tempModel,'lb',targetIndx,0);
-tempModel = setParam(tempModel,'obj',growth_indx,1);
-%Get WT solutions
-[WTsol,~] = solveECmodel(tempModel,tempModel,'pFBA',minIndex);
-maxGrowth = WTsol(growth_indx);
-tempModel = setParam(tempModel,'lb',growth_indx,0.1);
-tempModel = setParam(tempModel,'obj',targetIndx,1);
-[WTsol,~] = solveECmodel(tempModel,tempModel,'pFBA',minIndex);
-prodWT    = WTsol(targetIndx);
-WTval     = prodWT/WTsol(CUR_indx);
-
-for i=1:height(candidates)
-    gene   = candidates.genes{i};
-    enzyme = candidates.enzymes{i};
-    short  = candidates.shortNames{i};
-    action = candidates.actions(i);
-    if action ==1
-        action = 2;
-    end
-    OEf    = candidates.OE(i);
-    modifications = {gene action OEf};
-    if ~isempty(enzyme)
-        index  = find(contains(tempModel.rxnNames,['draw_prot_' enzyme]));
-        pUsage = WTsol(index);
-    else 
-        pUsage = [];
-    end
-    if action ==0 & isempty(pUsage)
-        pUsage = 1E-9;
-    end
-    mutantModel     = getMutant(tempModel,modifications,pUsage);
-    [mutSolution,~] = solveECmodel(mutantModel,mutantModel,'pFBA',minIndex);
-    if ~isempty(mutSolution)
-        yield = mutSolution(targetIndx)/mutSolution(CUR_indx);
-        FC_y  = yield/WTval;
-        FC_p  = mutSolution(targetIndx)/prodWT;
-    else
-        FC_y = 0;
-        FC_p = 0;
-    end
-    FChanges_y = [FChanges_y; FC_y];
-    FChanges_p = [FChanges_p; FC_p];
-    %disp(['Ready with genetic modification #' num2str(i) '[' short ': ' num2str(action) '] FC: ' num2str(FC_y)])
-end
-validated  = mean([FChanges_y,FChanges_p],2)>=(1-tol);
-[maxVal,I] = max(FChanges_y);
-if ~(maxVal>=1)
-    maxVal = [];
-    gene   = [];
-else 
-    TOPgene = candidates.genes{I};
-    FC_y    = FChanges_y(I);
-    disp([' Top candidate gene: ' short ' FC: ' num2str(FC_y)])
-end
-end
-
