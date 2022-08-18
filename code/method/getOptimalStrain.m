@@ -45,14 +45,7 @@ if flag
                 OEf    = levelCandidates.OE(j);
                 %Avoid including enzymes that cannot carry any flux
                 if fluxE & maxUse>=0
-                    enzUsage      = WTsol(enzRxn);
-                    if action ~= 0
-                        action = 2;%sol(enzRxn);%candidates.maxUsage(i);
-                        numTol = tolerance;
-                    else
-                        numTol = 1E-12;
-                    end
-                    
+                    enzUsage      = WTsol(enzRxn);                    
                     if enzUsage==0
                         enzUsage = 1E-9;
                     end

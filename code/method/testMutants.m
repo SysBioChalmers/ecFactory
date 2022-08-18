@@ -18,11 +18,6 @@ WTval     = prodWT/WTsol(modelParam.CUR_indx);
 for i=1:height(candidates)
     gene   = candidates.genes{i};
     enzyme = candidates.enzymes{i};
-    short  = candidates.shortNames{i};
-    action = candidates.actions(i);
-    if action ==1
-        action = 2;
-    end
     OEf = candidates.OE(i);
     modifications = {gene action OEf};
     if ~isempty(enzyme)
