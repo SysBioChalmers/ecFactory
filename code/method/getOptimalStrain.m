@@ -1,27 +1,23 @@
-function [optStrain,optGenes,FChanges,iB] = getOptimalStrain(model,candidates,rxnIndxs,protFlag)
+function [optStrain,optGenes,FChanges,iB] = getOptimalStrain(model,candidates,modelParam,protFlag)
 
 tolerance = 0.0001;
 
-GURindex    = rxnIndxs(1);
-targetIndex = rxnIndxs(2);
-growth_indx = rxnIndxs(3);
-prot_index  = rxnIndxs(4);
-tempModel = setParam(model,'lb',targetIndex,0);
-tempModel = setParam(tempModel,'obj',growth_indx,1);
+tempModel = setParam(model,'lb',modelParam.targetIndx,0);
+tempModel = setParam(tempModel,'obj',modelParam.growth_indx,1);
 %Get WT solutions
-[WTsol,~] = solveECmodel(tempModel,tempModel,'pFBA',prot_index);
-maxGrowth = WTsol(growth_indx);
-tempModel = setParam(tempModel,'lb',growth_indx,0.1);
-tempModel = setParam(tempModel,'obj',targetIndex,1);
+[WTsol,~] = solveECmodel(tempModel,tempModel,'pFBA',modelParam.prot_indx);
+maxGrowth = WTsol(modelParam.growth_indx);
+tempModel = setParam(tempModel,'lb',modelParam.growth_indx,0.1);
+tempModel = setParam(tempModel,'obj',modelParam.targetIndx,1);
 %Get WT yield
-[WTsol,flag] = solveECmodel(tempModel,tempModel,'pFBA',prot_index);
+[WTsol,flag] = solveECmodel(tempModel,tempModel,'pFBA',modelParam.prot_indx);
 if flag
     if protFlag
-        minIndex = prot_index;
+        minIndex = modelParam.prot_indx;
     else
-        minIndex = GURindex;
+        minIndex = modelParam.CUR_indx;
     end
-    WTyield = WTsol(targetIndex)/(WTsol(minIndex));
+    WTyield = WTsol(modelParam.targetIndx)/(WTsol(minIndex));
     %Create mutants iteratively
     optStrain  = tempModel;
     FChanges   = [];
@@ -29,6 +25,7 @@ if flag
     counter    = 0;
     previousFC = 1;
     for i=[1 2 3]
+        %sort targets by priority level and foldChange metric
         levelCandidates = candidates(candidates.priority==i,:);
         levelCandidates.foldChange = mean([levelCandidates.foldChange_yield,levelCandidates.foldChange_pRate],2);
         levelCandidates = sortrows(levelCandidates,'foldChange','descend');
@@ -48,7 +45,6 @@ if flag
                 OEf    = levelCandidates.OE(j);
                 %Avoid including enzymes that cannot carry any flux
                 if fluxE & maxUse>=0
-                    modifications = {gene action OEf};
                     enzUsage      = WTsol(enzRxn);
                     if action ~= 0
                         action = 2;%sol(enzRxn);%candidates.maxUsage(i);
@@ -58,18 +54,19 @@ if flag
                     end
                     
                     if enzUsage==0
-                        enzUsage = 1E-8;
+                        enzUsage = 1E-9;
                     end
+                    modifications = {gene action OEf};
                     tempMutant = getMutant(optStrain,modifications,enzUsage);
-                    [mutSol,~] = solveECmodel(tempMutant,model,'pFBA',prot_index);
+                    [mutSol,~] = solveECmodel(tempMutant,model,'pFBA',modelParam.prot_indx);
                     
                     if ~isempty(mutSol)
-                        yield = mutSol(targetIndex)/(mutSol(minIndex));
+                        yield = mutSol(modelParam.targetIndx)/(mutSol(minIndex));
                         FC_y  = yield/WTyield;
-                        FC_p  = mutSol(targetIndex)/WTsol(targetIndex);
+                        FC_p  = mutSol(modelParam.targetIndx)/WTsol(modelParam.targetIndx);
                         score = mean([FC_y,FC_p]);
                         %Just keep those genes that don't affect the production phenotype
-                        if score >= (previousFC+numTol)
+                        if score >= (previousFC)%+numTol)
                             FChanges   = [FChanges; score];
                             genesFC    = [genesFC;{gene}];
                             optStrain  = tempMutant;

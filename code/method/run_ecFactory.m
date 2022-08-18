@@ -12,9 +12,9 @@ essential = strtrim(essential.Ids);
 
 %Get relevant rxn indexes
 modelParam.targetIndx  = find(strcmpi(model.rxns,modelParam.rxnTarget));
-CUR_indx    = find(strcmpi(model.rxns,modelParam.CSrxn));
-prot_indx   = find(contains(model.rxns,'prot_pool'));
-growth_indx = find(strcmpi(model.rxns,modelParam.growthRxn));
+modelParam.CUR_indx    = find(strcmpi(model.rxns,modelParam.CSrxn));
+modelParam.prot_indx   = find(contains(model.rxns,'prot_pool'));
+modelParam.growth_indx = find(strcmpi(model.rxns,modelParam.growthRxn));
 
 %verification steps
 model = check_enzyme_fields(model);
@@ -97,15 +97,15 @@ disp([num2str(step) '.-  **** Running enzyme usage variability analysis ****'])
 tempModel = model;
 %Fix suboptimal experimental biomass yield conditions
 V_bio = expYield*modelParam.CS_MW;
-tempModel.lb(growth_indx) = V_bio;
+tempModel.lb(modelParam.growth_indx) = V_bio;
 %Fix unit C source uptake
-tempModel.lb(CUR_indx) = (1-tol)*1;
-tempModel.ub(CUR_indx) = (1+tol)*1;
+tempModel.lb(modelParam.CUR_indx) = (1-tol)*1;
+tempModel.ub(modelParam.CUR_indx) = (1+tol)*1;
 %Get and fix optimal production rate
 tempModel = setParam(tempModel, 'obj', modelParam.targetIndx, +1);
 sol       = solveLP(tempModel,1);
 WT_prod   = sol.x(modelParam.targetIndx);
-WT_CUR    = sol.x(CUR_indx);
+WT_CUR    = sol.x(modelParam.CUR_indx);
 tempModel.lb(modelParam.targetIndx) = (1-tol)*WT_prod;
 tempModel.ub(modelParam.targetIndx) = (1+tol)*WT_prod;
 %Run FVA for all enzyme usages subject to fixed CUR and Grates
@@ -225,20 +225,18 @@ disp([' * ' num2str(height(candidates)) ' gene targets remain'])
 step = step+1;
 disp('  ')
 disp([num2str(step) '.-  **** Mechanistic validation of results ****'])
-%Relevant rxn indexes
-relIndexes = [CUR_indx, modelParam.targetIndx, growth_indx];
 %relax target rxn bounds
 tempModel.lb(modelParam.targetIndx) = (1-tol)*WT_prod;
 tempModel.ub(modelParam.targetIndx) = 1000;
 %Unconstrain CUR and biomass formation
-tempModel = setParam(tempModel,'ub',CUR_indx,1000);
-tempModel = setParam(tempModel,'lb',CUR_indx,0);
-tempModel = setParam(tempModel,'ub',growth_indx,1000);
-tempModel = setParam(tempModel,'lb',growth_indx,0);
+tempModel = setParam(tempModel,'ub',modelParam.CUR_indx,1000);
+tempModel = setParam(tempModel,'lb',modelParam.CUR_indx,0);
+tempModel = setParam(tempModel,'ub',modelParam.growth_indx,1000);
+tempModel = setParam(tempModel,'lb',modelParam.growth_indx,0);
 %set Max product formation as objective function
 tempModel = setParam(tempModel,'obj',modelParam.targetIndx,+1);
 %Run mechanistic validation of targets
-[FCs_y,FCs_p,validated]  = testMutants(candidates,tempModel,relIndexes);
+[FCs_y,FCs_p,validated]  = testMutants(candidates,tempModel,modelParam);
 %Discard genes with a negative impact on production yield
 candidates.foldChange_yield = FCs_y; 
 candidates.foldChange_pRate = FCs_p; 
@@ -255,7 +253,7 @@ disp('  ')
 % get optimal strain according to priority candidates
 disp(' Constructing optimal strain')
 disp(' ')
-[mutantStrain,filtered] = getOptimalStrain(tempModel,candidates,[CUR_indx modelParam.targetIndx growth_indx prot_indx],false);
+[mutantStrain,filtered] = getOptimalStrain(tempModel,candidates,modelParam,false);
 cd (current) 
 if ~isempty(filtered) & istable(filtered)
     disp(' ')
