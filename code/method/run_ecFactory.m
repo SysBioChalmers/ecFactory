@@ -1,4 +1,4 @@
-%function [mutantStrain,filtered,step] = run_ecFactory(model,modelParam,expYield,results_folder)
+%function [optStrain,remaining,step] = run_ecFactory(model,modelParam,expYield,results_folder)
 model = const_ecModel;
 mkdir(results_folder)
 current      = pwd;
@@ -10,7 +10,8 @@ step = 0;
 %Parameters for FSEOF method
 Nsteps     = 16; %number of FBA steps in ecFSEOF
 alphaLims  = [0.5*expYield 2*expYield]; %biomass yield limits for ecFSEOF
-thresholds = [0.5 1.05]; %K-score thresholds for valid gene targets
+lowerK     = 0.5/2;
+thresholds = [lowerK 1.05]; %K-score thresholds for valid gene targets
 delLimit   = 0.05; %K-score limit for considering a target as deletion
 %read file with essential genes list
 essential = readtable('../../data/essential_genes.txt','Delimiter','\t');
@@ -18,7 +19,7 @@ essential = strtrim(essential.Ids);
 %Get relevant rxn indexes
 modelParam.targetIndx  = find(strcmpi(model.rxns,modelParam.rxnTarget));
 modelParam.CUR_indx    = find(strcmpi(model.rxns,modelParam.CSrxn));
-modelParam.prot_indx   = find(contains(model.rxns,'prot_pool'));
+modelParam.prot_indx   = find(strcmpi(model.rxns,'prot_pool_exchange'));
 modelParam.growth_indx = find(strcmpi(model.rxns,modelParam.growthRxn));
 %ecModel verification steps
 model = check_enzyme_fields(model);
@@ -91,7 +92,17 @@ candidates(toRemove,:) = [];
 cd (current)
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
 disp('  ')
+%5.- Add flux leak targets (those genes not optimal for production that may
+%consume the product of interest. (probaly extend the approach to inmediate
+%precurssors)
+step = step+1;
+disp('  ')
+disp([num2str(step) '.-  **** Find flux leak targets to block ****'])
+candidates = find_flux_leaks(candidates,modelParam.targetIndx,model);
+disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
+disp('  ')
 writetable(candidates,[results_folder '/candidates_L1.txt'],'Delimiter','\t','QuoteStrings',false);
+
 
 % 3.- Enzyme usage variability analysis (EVA) and prioritization of targets
 step = step+1;
@@ -106,9 +117,11 @@ tempModel.ub(modelParam.CUR_indx) = (1+tol)*1;
 %Get and fix optimal production rate
 tempModel = setParam(tempModel, 'obj', modelParam.targetIndx, +1);
 sol       = solveLP(tempModel,1);
-WT_prod   = sol.x(modelParam.targetIndx);
-tempModel.lb(modelParam.targetIndx) = (1-tol)*WT_prod;
-tempModel.ub(modelParam.targetIndx) = (1+tol)*WT_prod;
+max_prod   = sol.x(modelParam.targetIndx);
+tempModel.lb(modelParam.targetIndx) = (1-tol)*max_prod;
+tempModel.ub(modelParam.targetIndx) = (1+tol)*max_prod;
+modelParam.WT_prod = max_prod;
+modelParam.V_bio   = V_bio;
 %Run FVA for all enzyme usages subject to fixed CUR and Grates
 EVAtable = enzymeUsage_FVA(tempModel,candidates.enzymes);
 %Classify targets according to enzyme variability ranges
@@ -204,15 +217,7 @@ disp(' Discard genes with priority level = 0')
 candidates = candidates(candidates.priority>0,:);
 candidates = sortrows(candidates,'priority','ascend');
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
-%5.- Add flux leak targets (those genes not optimal for production that may
-%consume the product of interest. (probaly extend the approach to inmediate
-%precurssors)
-step = step+1;
-disp('  ')
-disp([num2str(step) '.-  **** Find flux leak targets to block ****'])
-candidates = find_flux_leaks(candidates,modelParam.targetIndx,tempModel);
-disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
-
+writetable(candidates,[results_folder '/candidates_L2.txt'],'Delimiter','\t','QuoteStrings',false);
 %6.- EUVA for suboptimal biomasss production subject to a minimal (1%)
 % production rate of the target product and a unit CS uptake rate
 %Get max biomass 
@@ -220,7 +225,7 @@ step = step+1;
 disp('  ')
 disp([num2str(step) '.-  **** Running EUVA for WT strain (max. biomass and min. product) ****'])
 tempModel = setParam(tempModel, 'obj', modelParam.growth_indx, +1);
-tempModel.lb(modelParam.targetIndx) = 0.01*WT_prod;
+tempModel.lb(modelParam.targetIndx) = 0.01*max_prod;
 tempModel.ub(modelParam.targetIndx) = 1000;
 sol       = solveLP(tempModel,1);
 maxVBio   = sol.x(modelParam.growth_indx);
@@ -232,11 +237,10 @@ EVAbio = enzymeUsage_FVA(tempModel,candidates.enzymes);
 candidates.minUsageBio = EVAbio.minU;
 candidates.maxUsageBio = EVAbio.maxU;
 candidates.pUsageBio   = EVAbio.pU;
-
 % 7.- Mechanistic validation of remaining targets
 step = step+1;
 disp('  ')
-disp([num2str(step) '.-  **** Validation of individual targets according to FBA performance ****'])
+disp([num2str(step) '.-  **** Find an optimal combination of remaining targets ****'])
 %Unconstrain CUR, unconstrain product formation 
 %and set a minimal biomass formation
 tempModel = setParam(tempModel,'ub',modelParam.CUR_indx,1000);
@@ -251,39 +255,31 @@ tempModel = setParam(tempModel,'obj',modelParam.targetIndx,+1);
 proteins = strcat('draw_prot_',candidates.enzymes);
 [~,enz_pos] = ismember(proteins,tempModel.rxns);
 candidates.enz_pos = enz_pos;
-tempModel.lb(candidates.enz_pos(find(candidates.enz_pos))) = 0.99*candidates.minUsageBio(find(candidates.enz_pos));
+tempModel.lb(candidates.enz_pos(find(candidates.enz_pos))) = 0.99*candidates.pUsageBio(find(candidates.enz_pos));
 tempModel.ub(candidates.enz_pos(find(candidates.enz_pos))) = 1.01*candidates.maxUsageBio(find(candidates.enz_pos));
 %Run mechanistic validation of targets
-[mutResults,topGene] = testGeneModifications(candidates,tempModel,modelParam);
-%Discard genes with a negative impact on production yield or rate
-candidates.performance = mutResults.performance; 
-candidates = candidates(mutResults.validated,:);
-disp(' Discard individual gene modifications with a negative impact on product yield or rate')
-disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
-disp('  ')
-writetable(candidates,[results_folder '/candidates_L2.txt'],'Delimiter','\t','QuoteStrings',false);
-
-% 8.- Construct an optimal strain with remaining targets
-step = step+1;
-disp([num2str(step) '.-  **** Construct an optimal strain with remaining targets ****'])
-disp('  ')
-% get optimal strain according to priority candidates
-disp(' Constructing optimal strain')
-disp(' ')
-[mutantStrain,filtered] = constructOptimalStrain(tempModel,candidates,modelParam);
+%[mutResults,topGene] = testGeneModifications(candidates,tempModel,modelParam);
+[optStrain,remaining] = constructMinimalMutant(tempModel,candidates,modelParam);
+disp([' * ' num2str(height(remaining)) ' gene targets remain']) 
+% 
+pause
+% % 9.- Find deletion redundancies
+% step = step+1;
+% disp([num2str(step) '.-  **** Find deletion redundancies ****'])
+% disp('  ')
 cd (current) 
-if ~isempty(filtered) & istable(filtered)
-    disp(' ')
-    step = step+1;
-    disp([num2str(step) '.-  **** Discard redundant deletion targets ****'])
-    disp(' ')
-    %filtered = discardRedundancies(tempModel,filtered);
-    %remove unnecessary columns    
-    disp([' * ' num2str(height(filtered)) ' gene targets remain'])
-    disp('  ')
-    %Write final results
-    writetable(filtered,[results_folder '/candidates_L3.txt'],'Delimiter','\t','QuoteStrings',false);
+if ~isempty(remaining) & istable(remaining)
+%     disp(' ')
+%     step = step+1;
+%     disp([num2str(step) '.-  **** Discard redundant deletion targets ****'])
+%     disp(' ')
+%     %remaining = discardRedundancies(tempModel,remaining);
+%     %remove unnecessary columns    
+%     disp([' * ' num2str(height(remaining)) ' gene targets remain'])
+%     disp('  ')
+writetable(remaining,[results_folder '/candidates_L3.txt'],'Delimiter','\t','QuoteStrings',false);
 end
+
 %Generate transporter targets file (lists a number of transport steps
 %with no enzymatic annotation that are relevant for enhancing target
 %product formation.
