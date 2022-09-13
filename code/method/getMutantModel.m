@@ -1,4 +1,4 @@
-function mutantModel = getMutantModel(model,modifications,base_usage)
+function [mutantModel,success] = getMutantModel(model,modifications,base_usage,verbose)
 % getMutant
 %   Get an in-Silico mutant strain based on the provided modifications
 %   list. Multiple and combinatorial gene deletions, overexpressions and
@@ -25,8 +25,11 @@ function mutantModel = getMutantModel(model,modifications,base_usage)
 %   Usage: mutantModel = getMutantModel(model,modifications,base_usage,message)
 %
 %   Ivan Domenzain.     Last edited 2022-08-19
-if nargin<3
-	base_usage = [];
+if nargin<4
+    verbose = false;
+    if nargin<3
+        base_usage = [];
+    end
 end
 
 mutantModel = model;
@@ -61,12 +64,9 @@ for i=1:length(genes2mod)
             enzRxn = find(contains(mutantModel.rxnNames,enzyme));
             %If the enzRxn is bounded modify the UB
             if contains(mutantModel.rxnNames(enzRxn),'exchange') || mutantModel.ub(enzRxn)<100
-                mutantModel.ub(enzRxn) = mutantModel.ub(enzRxn)*expFactor;
+                %mutantModel.ub(enzRxn) = mutantModel.ub(enzRxn)*expFactor;
+                mutantModel.ub(enzRxn) = base_usage*expFactor;
                 %mutantModel.lb(enzRxn) = 0;
-                %make sure that e_i lb < e_i ub
-                if mutantModel.ub(enzRxn)<= mutantModel.lb(enzRxn)
-                    mutantModel.lb(enzRxn) = 0.95*mutantModel.ub(enzRxn);
-                end
             else
                 %If the enzRxn is not bounded modify enzyme usage forcing its
                 %usage lb to a given value
@@ -81,6 +81,11 @@ for i=1:length(genes2mod)
                         mutantModel.lb(enzRxn) = 0;
                     end
                 end
+            end
+            
+            %make sure that e_i lb < e_i ub
+            if mutantModel.ub(enzRxn)<= mutantModel.lb(enzRxn)
+               mutantModel.lb(enzRxn) = 0.99*mutantModel.ub(enzRxn);
             end
         elseif strcmpi(action,'HE')
             enzName    = ['prot_' enzyme{1}];
@@ -102,13 +107,17 @@ for i=1:length(genes2mod)
         end
     end
 end
-sol = solveLP(mutantModel,1);
+sol = solveLP(mutantModel);
 if ~isempty(sol.x)
+    success = true;
     %disp(sol.f)
-    %disp('Mutant strain successfully constructed')
+    message = 'Mutant strain successfully constructed';
 else
-    gene
-    action
-    warning(['Mutant strain is not viable'])
+    success = false;
+    message = ['WARNING: ' gene{1}  ' ' action{1} ' is not viable'];
+end
+
+if verbose 
+    disp(message)
 end
 end
