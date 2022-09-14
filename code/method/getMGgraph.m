@@ -72,6 +72,7 @@ if ~isempty(algorithm)
     labelnode(p,1:height(metGeneGraph.Nodes),metNames(toKeep))
     layout(p,algorithm)
     labeledge(p,1:numedges(metGeneGraph),genes(x))
+    title('Metabolites-genes graph')
     set(gca,'FontSize',15)
 end
 metNames = metNames(toKeep);

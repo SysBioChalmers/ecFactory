@@ -1,5 +1,5 @@
 function [optMutant,remaining] = constructMinimalMutant(model,candidates,modelParam)
-tol =0;%-1E-6;
+tol =-1E-12;%-1E-6;
 tempModel = model;
 %Get max WT production rate
 WTsol_prod = solveECmodel(tempModel,tempModel,'pFBA',modelParam.prot_indx);
@@ -46,10 +46,11 @@ optMutant = setParam(optMutant,'obj',modelParam.targetIndx,1);
 [mutSol_y,~] = solveECmodel(optMutant,model,'pFBA',modelParam.CUR_indx);
 OptprodR = mutSol_r(modelParam.targetIndx);
 Optyield = mutSol_y(modelParam.targetIndx)/(mutSol_y(modelParam.CUR_indx));
-
-disp('The combination of all candidate modifications induces:')
+bYield    = mutSol_y(modelParam.growth_indx)/(mutSol_y(modelParam.CUR_indx)*modelParam.CS_MW);
+disp('Finding a minimal combination of targets displaying:')
 disp([' - a production rate of: ' num2str(OptprodR) ' mmol/gDwh'])
-disp([' - a production yield FC: ' num2str(Optyield) ' mmol/mmol glucose'])
+disp([' - a production yield of: ' num2str(Optyield) ' mmol/mmol glucose'])
+disp([' - a biomass yield of: ' num2str(bYield) 'g biomass/g glucose'])
 disp(' ')
 %sort targets by priority level and k_score
 [levelCandidates,~] = sortrows(candidates,{'priority' 'k_scores'},{'ascend' 'ascend'});
@@ -65,7 +66,7 @@ for i=1:height(levelCandidates)
     tempMutant = optMutant;
     %revert mutation
     if enzIdx>0
-        saturationOpt         =  mutSol_y(enzIdx)/(optMutant.ub(enzIdx)+1E-15);
+        saturationOpt         =  mutSol_r(enzIdx)/(optMutant.ub(enzIdx)+1E-15);
         tempMutant.ub(enzIdx) = model.ub(enzIdx);
         tempMutant.lb(enzIdx) = model.lb(enzIdx);
         if tempMutant.ub(enzIdx) <=tempMutant.lb(enzIdx)
@@ -122,7 +123,7 @@ for i=1:height(levelCandidates)
         
         remaining = [remaining;levelCandidates(i,:)];
         counter = counter+1;
-        disp(['  Optimal target # ' num2str(counter) ': (' short '), ' action{1} ' score: ' num2str(1-score)])
+        disp(['  Validated optimal target # ' num2str(counter) ': (' short '), ' action{1}])
     else
     	optMutant = tempMutant;
     end
