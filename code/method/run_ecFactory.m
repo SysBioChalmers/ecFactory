@@ -1,8 +1,7 @@
 function [optStrain,remaining,step] = run_ecFactory(model,modelParam,expYield,results_folder)
-model = const_ecModel;
+%model = const_ecModel;
 mkdir(results_folder)
 current      = pwd;
-plotF = false;
 %method parameters
 tol  = 1E-13; %numeric tolerance for determining non-zero enzyme usages
 OEF  = 2;     %overexpression factor for enzyme targets
@@ -102,7 +101,9 @@ candidates(toRemove,:) = [];
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
 disp('  ')
 writetable(candidates,[results_folder '/candidates_L1.txt'],'Delimiter','\t','QuoteStrings',false);
-
+proteins = strcat('draw_prot_',candidates.enzymes);
+[~,enz_pos] = ismember(proteins,model.rxns);
+candidates.enz_pos = enz_pos;
 % 4.- Construct Genes-metabolites network for classification of targets
 step = step+1;
 disp([num2str(step) '.-  **** Construct Genes-metabolites network for classification of targets ****'])
@@ -181,7 +182,6 @@ candidates.minUsage = EVAtable.minU;
 candidates.maxUsage = EVAtable.maxU;
 candidates.pUsage   = candidateUsages;
 %Discard enzymes whose usage LB = UB = 0
-disp('  ')
 disp(' Discard OE targets with lb=ub=0')
 toRemove = strcmpi(candidates.EV_type,'unusable') & strcmpi(candidates.actions,'OE');
 candidates(toRemove,:) = [];
@@ -266,6 +266,21 @@ candidates.maxUsageBio = EVAbio.maxU;
 candidates.pUsageBio   = EVAbio.pU;
 disp(' ')
 
+%9.- 
+step = step+1;
+disp([num2str(step) '.-  **** Compare Enzyme Usage Variability ranges ****'])
+candidates = compare_EUVR(candidates);
+disp(' Removing enzymes with inconsistent enzyme usage variability patterns')
+toRemove = strcmpi(candidates.EUV_comparison,'embedded') | ...
+           (~strcmpi(candidates.actions,'OE') & contains(candidates.EUV_comparison,'up_')) | ...
+           (strcmpi(candidates.actions,'OE') & contains(candidates.EUV_comparison,'down_')) |...
+           (strcmpi(candidates.EUV_comparison,'overlaped') & strcmpi(candidates.actions,'KD'));
+disp(candidates(toRemove,:))
+
+candidates(toRemove,:) = [];
+disp(' ')
+disp([' ' num2str(height(candidates)) ' gene targets remain']) 
+disp(' ')
 % 8.- Combine targets
 step = step+1;
 disp([num2str(step) '.-  **** Find an optimal combination of remaining targets ****'])
@@ -281,24 +296,20 @@ tempModel = setParam(tempModel,'lb',modelParam.targetIndx,0);
 %set Max product formation as objective function
 tempModel = setParam(tempModel,'obj',modelParam.targetIndx,+1);
 %constrain enzyme usages with optimal biomass formation profile (WT)
-proteins = strcat('draw_prot_',candidates.enzymes);
-[~,enz_pos] = ismember(proteins,tempModel.rxns);
-candidates.enz_pos = enz_pos;
 tempModel.lb(candidates.enz_pos(find(candidates.enz_pos))) = 0.99*candidates.pUsageBio(find(candidates.enz_pos));
 tempModel.ub(candidates.enz_pos(find(candidates.enz_pos))) = 1.01*candidates.maxUsageBio(find(candidates.enz_pos));
 %Run mechanistic validation of targets
 %[mutResults,topGene] = testGeneModifications(candidates,tempModel,modelParam);
 [optStrain,remaining] = constructMinimalMutant(tempModel,candidates,modelParam);
 %get a gene-mets graph with the remaining targets 
-if plotF
+%if plotF
     MetsIndxs    = (~contains(optStrain.metNames,'prot_'));
     nodeMets     = optStrain.mets(MetsIndxs);
     toKeep       = (remaining.priority>0 & remaining.conectivity<15);
-    [GeneMetMatrix,~,Gconect] = getMetGeneMatrix(optStrain,remaining.genes);
+    [GeneMetMatrix,~,~] = getMetGeneMatrix(optStrain,remaining.genes);
     tempGMmatrix = GeneMetMatrix(:,toKeep);
-    graphGenes   = remaining.shortNames(toKeep);
-    [metGeneGraph,metsGraph] = getMGgraph(tempGMmatrix,nodeMets,tempModel,'force',remaining(toKeep,:));
-end
+    getMGgraph(tempGMmatrix,nodeMets,tempModel,'force',remaining(toKeep,:));
+%end
 disp([' * The predicted optimal strain contains ' num2str(height(remaining)) ' gene modifications']) 
 disp(' ')
 
@@ -311,8 +322,8 @@ if ~isempty(remaining) & istable(remaining)
 %     %remove unnecessary columns    
 %     disp([' * ' num2str(height(remaining)) ' gene targets remain'])
 %     disp('  ')
-writetable(remaining,[results_folder '/candidates_L3.txt'],'Delimiter','\t','QuoteStrings',false);
 end
+writetable(remaining,[results_folder '/candidates_L3.txt'],'Delimiter','\t','QuoteStrings',false);
 %Generate transporter targets file (lists a number of transport steps
 %with no enzymatic annotation that are relevant for enhancing target
 %product formation.
