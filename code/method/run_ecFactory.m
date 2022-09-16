@@ -1,5 +1,7 @@
-function [optStrain,remaining,step] = run_ecFactory(model,modelParam,expYield,results_folder)
-%model = const_ecModel;
+function [optStrain,remaining,step] = run_ecFactory(model,modelParam,expYield,results_folder,graphPlot)
+if nargin<5
+    graphPlot = false;
+end
 mkdir(results_folder)
 current      = pwd;
 %method parameters
@@ -129,6 +131,7 @@ candidates.groups = groups;
 step = step+1;
 disp([num2str(step) '.-  **** Running EUVA for optimal production conditions (minimal biomass) ****'])
 tempModel = model;
+disp(' ')
 disp('  - Fixed unit glucose uptake rate')
 %Fix unit C source uptake
 tempModel.lb(modelParam.CUR_indx) = (1-tol)*1;
@@ -153,9 +156,8 @@ disp(' ')
 %Run FVA for all enzyme usages subject to fixed CUR and Grates
 EVAtable = enzymeUsage_FVA(tempModel,candidates.enzymes);
 
+disp('* Discard targets according to EUVA results for optimal production ****')
 %Classify targets according to enzyme variability ranges
-step = step+1;
-disp([num2str(step) '.-  **** Classify targets according to enzyme variability ranges ****'])
 candidateUsages = EVAtable.pU;
 disp('  ')
 candidates.EV_type = cell(height(candidates),1);
@@ -167,13 +169,13 @@ candidates.EV_type(idxs) = {'essential'}; %enzymes needed for optimal production
 idxs = find(EVAtable.minU<=tol & EVAtable.maxU>tol);
 candidates.EV_type(idxs) = {'totally_variable'}; %enzymes that can take any flux (ussually isoenzymes)
 idxs = find((EVAtable.minU./EVAtable.maxU)>=0.99 & EVAtable.minU>tol);
-candidates.EV_type(idxs) = {'tightly_const'}; %enzymes that are needed up to its maximum capacity
+candidates.EV_type(idxs) = {'essential_tightly_const'}; %enzymes that are needed up to its maximum capacity
 idxs = find(strcmpi(candidates.EV_type,'totally_variable') & candidateUsages>tol);
-candidates.EV_type(idxs) = {'opt_isoenz'};  %isoenzymes that are chosen for optimal production 
-idxs = find(strcmpi(candidates.EV_type,'opt_isoenz') & (candidateUsages./EVAtable.maxU)>=0.99);
-candidates.EV_type(idxs) = {'opt_isoenz_tight'}; %isoenzymes that are chosen for optimal production, up to its maximum capacity
+candidates.EV_type(idxs) = {'production_opt'};  %isoenzymes that are chosen for optimal production 
+idxs = find(strcmpi(candidates.EV_type,'production_opt') & (candidateUsages./EVAtable.maxU)>=0.99);
+candidates.EV_type(idxs) = {'production_opt_tight'}; %isoenzymes that are chosen for optimal production, up to its maximum capacity
 idxs = find(strcmpi(candidates.EV_type,'totally_variable') & candidateUsages<=tol);
-candidates.EV_type(idxs) = {'subOpt_isoenz'}; %isoenzymes that are not chosen for optimal production
+candidates.EV_type(idxs) = {'unnecessary_prod'}; %isoenzymes that are not chosen for optimal production
 %Append EUVA results to target candidates table
 candidates.OE(strcmpi(candidates.actions,'OE')) = OEF;
 candidates.OE(strcmpi(candidates.actions,'KD')) = KDF;
@@ -181,66 +183,28 @@ candidates.OE(strcmpi(candidates.actions,'KO')) = 0;
 candidates.minUsage = EVAtable.minU;
 candidates.maxUsage = EVAtable.maxU;
 candidates.pUsage   = candidateUsages;
-%Discard enzymes whose usage LB = UB = 0
-disp(' Discard OE targets with lb=ub=0')
-toRemove = strcmpi(candidates.EV_type,'unusable') & strcmpi(candidates.actions,'OE');
+%Discard enzymes 
+disp('  - Discard OE targets with lb=ub=0')
+toRemove = (strcmpi(candidates.EV_type,'unusable') & strcmpi(candidates.actions,'OE')) | isnan(candidates.minUsage);
 candidates(toRemove,:) = [];
-disp(' Discard enzymes essential for production from deletion targets')
-toRemove = (strcmpi(candidates.EV_type,'tightly_constrained') | strcmpi(candidates.EV_type,'essential')) & ...
+disp('  - Discard enzymes essential for production from deletion targets')
+toRemove = (strcmpi(candidates.EV_type,'essential_tightly_const') | strcmpi(candidates.EV_type,'essential')) & ...
        (candidates.k_scores<=delLimit);
 candidates(toRemove,:) = [];       
-disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
-disp('  ')
-disp(' **** Ranking gene targets by priority level:')
-% Rank candidates by priority
-disp(' Priority levels:')
-candidates.priority = zeros(height(candidates),1);
-disp('   1.- Gene candidates for OE with min. usage>0 (essential for production)')
-idxs =(strcmpi(candidates.EV_type,'essential') | ...
-       strcmpi(candidates.EV_type,'tightly_const')) & ...
-       strcmpi(candidates.actions,'OE');
-candidates.priority(idxs) = 1;
-disp('   1.- Gene candidates for KO/KD with maxUsage=0 (unusable)')
-idxs =strcmpi(candidates.EV_type,'unusable'); %& candidates.unique;
-candidates.priority(idxs) = 1;
-
-disp('   2.- Isoenzyme candidates for OE with pUsage=maxUsage>0 (optimal isoforms const.)')
-idxs =strcmpi(candidates.EV_type,'opt_isoenz_tight') & strcmpi(candidates.actions,'OE');
-candidates.priority(idxs) = 2;
-%disp('   2.- Suboptimal isoenzymes candidates for KO/KD (maxUsage>0 pUsage=0)')
-disp('   2.- Enzyme candidates for KO/KD that can be used for production')
-idxs =~strcmpi(candidates.EV_type,'unusable') & ~strcmpi(candidates.actions,'OE');
-candidates.priority(idxs) = 2;
-
-disp('   3.- Isoenzyme candidates for OE with pUsage>0 & pUsage<maxUsage (optimal isoforms)')
-idxs =strcmpi(candidates.EV_type,'opt_isoenz') & strcmpi(candidates.actions,'OE');
-candidates.priority(idxs) = 3;
-disp('   3.- Groups of remaining isoenzymes that are not used for optimal production')
+disp(' - Discard isoenzyme groups for KD/KO that contain an optimal isoform (redundant groups that increase mutant complexity)')
+toRemove = [];
 for k=1:max(candidates.groups)
     idx = find(candidates.groups==k & ~strcmpi(candidates.actions,'OE'));
     if length(idx)>1
-        if ~isempty(candidates.enzymes(idx(1))) & ~any(candidates.pUsage(idx)>tol)
-            candidates.priority(idx) = 3;
+        if ~isempty(candidates.enzymes(idx(1))) & any(candidates.pUsage(idx)>0)
+            toRemove = [toRemove;idx];
         end
     end
 end
+candidates(toRemove,:) = [];
 disp('  ')
-disp('   Discard isoenzyme groups that contain an optimal isoform (redundant groups that increase mutant complexity)')
-for k=1:max(candidates.groups)
-    idx = find(candidates.groups==k & ~strcmpi(candidates.actions,'OE'));
-    if length(idx)>1
-        if ~isempty(candidates.enzymes(idx(1))) & any(contains(candidates.EV_type(idx),'opt_isoenz'))
-            candidates.priority(idx) = 0;
-        end
-    end
-end
-disp('  ')
-%Keep priority genes and sort them accordingly
-disp(' Discard genes with priority level = 0')
-candidates = candidates(candidates.priority>0,:);
-candidates = sortrows(candidates,'priority','ascend');
 disp([' * ' num2str(height(candidates)) ' gene targets remain']) 
-writetable(candidates,[results_folder '/candidates_L2.txt'],'Delimiter','\t','QuoteStrings',false);
+disp('  ')
 
 %7.- EUVA for suboptimal biomasss production subject to a minimal (1%)
 % production rate of the target product and a unit CS uptake rate
@@ -265,22 +229,41 @@ candidates.minUsageBio = EVAbio.minU;
 candidates.maxUsageBio = EVAbio.maxU;
 candidates.pUsageBio   = EVAbio.pU;
 disp(' ')
-
-%9.- 
-step = step+1;
-disp([num2str(step) '.-  **** Compare Enzyme Usage Variability ranges ****'])
+%discard something 
+disp('* Discard targets according to EUVA results for reference strain ****')
 candidates = compare_EUVR(candidates);
-disp(' Removing enzymes with inconsistent enzyme usage variability patterns')
+disp('  - Discarding enzymes with inconsistent enzyme usage variability patterns')
 toRemove = strcmpi(candidates.EUV_comparison,'embedded') | ...
            (~strcmpi(candidates.actions,'OE') & contains(candidates.EUV_comparison,'up_')) | ...
-           (strcmpi(candidates.actions,'OE') & contains(candidates.EUV_comparison,'down_')) |...
-           (strcmpi(candidates.EUV_comparison,'overlaped') & strcmpi(candidates.actions,'KD'));
+           (strcmpi(candidates.actions,'OE') & contains(candidates.EUV_comparison,'down_'));% |...
 disp(candidates(toRemove,:))
-
 candidates(toRemove,:) = [];
 disp(' ')
 disp([' ' num2str(height(candidates)) ' gene targets remain']) 
 disp(' ')
+
+step = step+1;
+disp([num2str(step) '.-  **** Rank targets by priority levels ****'])
+disp(' ')
+%Rank targets by priority
+candidates.priority = zeros(height(candidates),1)+3;
+candidates.priority(contains(candidates.EUV_comparison,'up_') | contains(candidates.EUV_comparison,'down_')) = 2; % second priority for genes with overlaped demand ranges
+candidates.priority(contains(candidates.EUV_comparison,'_distinct')) = 1; %higher priority to the clearly up-down regulated genes
+disp(['  - ' num2str(sum(candidates.priority==1)) ' targets with priority level 1 (distinct enzyme demand levels between optimal production and optimal biomass cases)']) 
+disp(['  - ' num2str(sum(candidates.priority==2)) ' targets with priority level 2 (overlapped enzyme demand levels between optimal production and optimal biomass cases)']) 
+disp(['  - ' num2str(sum(candidates.priority==3)) ' targets with priority level 3 (other cases)']) 
+disp(' ')
+%Rename enzyme variability type for KDs and KOs according to their
+%variability ranges for maximum biomass production
+disp(' * Classifying targets according to their enzyme usage variability range type')
+idxs = ~strcmpi(candidates.actions,'OE') & candidates.pUsage < candidates.pUsageBio & candidates.pUsageBio>0 & ~contains(candidates.EV_type,'unnecessary');
+candidates.EV_type(idxs) = {'biomass_opt'};
+bioRatio = V_bio/maxVBio;
+ratios   = candidates.pUsage./candidates.pUsageBio;
+idxs     = ratios < bioRatio+1E-9 & ratios > bioRatio-1E-9;
+candidates.EV_type(idxs) = {'biomass_coupled'};
+disp(' ')
+
 % 8.- Combine targets
 step = step+1;
 disp([num2str(step) '.-  **** Find an optimal combination of remaining targets ****'])
@@ -299,30 +282,20 @@ tempModel = setParam(tempModel,'obj',modelParam.targetIndx,+1);
 tempModel.lb(candidates.enz_pos(find(candidates.enz_pos))) = 0.99*candidates.pUsageBio(find(candidates.enz_pos));
 tempModel.ub(candidates.enz_pos(find(candidates.enz_pos))) = 1.01*candidates.maxUsageBio(find(candidates.enz_pos));
 %Run mechanistic validation of targets
-%[mutResults,topGene] = testGeneModifications(candidates,tempModel,modelParam);
 [optStrain,remaining] = constructMinimalMutant(tempModel,candidates,modelParam);
 %get a gene-mets graph with the remaining targets 
-%if plotF
+if graphPlot
     MetsIndxs    = (~contains(optStrain.metNames,'prot_'));
     nodeMets     = optStrain.mets(MetsIndxs);
     toKeep       = (remaining.priority>0 & remaining.conectivity<15);
     [GeneMetMatrix,~,~] = getMetGeneMatrix(optStrain,remaining.genes);
     tempGMmatrix = GeneMetMatrix(:,toKeep);
     getMGgraph(tempGMmatrix,nodeMets,tempModel,'force',remaining(toKeep,:));
-%end
+end
 disp([' * The predicted optimal strain contains ' num2str(height(remaining)) ' gene modifications']) 
 disp(' ')
 
 cd (current) 
-if ~isempty(remaining) & istable(remaining)
-%     step = step+1;
-%     disp([num2str(step) '.-  **** Discard redundant deletion targets ****'])
-%     disp(' ')
-%     %remaining = discardRedundancies(tempModel,remaining);
-%     %remove unnecessary columns    
-%     disp([' * ' num2str(height(remaining)) ' gene targets remain'])
-%     disp('  ')
-end
 writetable(remaining,[results_folder '/candidates_L3.txt'],'Delimiter','\t','QuoteStrings',false);
 %Generate transporter targets file (lists a number of transport steps
 %with no enzymatic annotation that are relevant for enhancing target

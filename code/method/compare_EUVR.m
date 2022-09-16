@@ -7,9 +7,9 @@ for i=1:height(enzTable)
                 if enzTable.maxUsage(i) == enzTable.maxUsageBio(i)
                     type(i) = {'Equal'};
                 elseif enzTable.maxUsage(i)< enzTable.maxUsageBio(i)
-                    type(i) = {'down_embedded'};
+                    type(i) = {'down_subset'};
                 else
-                    type(i) = {'up_embedded'};
+                    type(i) = {'up_subset'};
                 end
             elseif enzTable.minUsage(i) < enzTable.minUsageBio(i)
                 if enzTable.maxUsage(i) < enzTable.minUsageBio(i)
