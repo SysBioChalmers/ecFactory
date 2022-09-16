@@ -236,7 +236,7 @@ disp('  - Discarding enzymes with inconsistent enzyme usage variability patterns
 toRemove = strcmpi(candidates.EUV_comparison,'embedded') | ...
            (~strcmpi(candidates.actions,'OE') & contains(candidates.EUV_comparison,'up_')) | ...
            (strcmpi(candidates.actions,'OE') & contains(candidates.EUV_comparison,'down_'));% |...
-disp(candidates(toRemove,:))
+%disp(candidates(toRemove,:))
 candidates(toRemove,:) = [];
 disp(' ')
 disp([' ' num2str(height(candidates)) ' gene targets remain']) 
@@ -303,11 +303,11 @@ writetable(remaining,[results_folder '/candidates_L3.txt'],'Delimiter','\t','Quo
 origin = 'GECKO/geckomat/utilities/ecFSEOF/results/*';
 copyfile(origin,results_folder)
 step = step+1;
-disp([num2str(step) '.-  **** Find transporter reactions with no gene association predicted as targets by ecFSEOF ****'])
+disp([num2str(step) '.-  **** Find transporter reactions with no enzyme association predicted as targets by ecFSEOF ****'])
 disp(' ')
 rxnsTable     = readtable([results_folder '/rxnsResults_ecFSEOF.txt'],'Delimiter','\t');
 transpTargets = getTransportTargets(rxnsTable,tempModel);
-disp([' * ' num2str(height(transpTargets)) ' unannotated transport reaction targets were found']) 
+disp([' * ' num2str(height(transpTargets)) ' transport reaction targets were found']) 
 disp(' ')
 writetable(transpTargets,[results_folder '/transporter_targets.txt'],'Delimiter','\t','QuoteStrings',false);
 delete([results_folder '/rxnsResults_ecFSEOF.txt'])
