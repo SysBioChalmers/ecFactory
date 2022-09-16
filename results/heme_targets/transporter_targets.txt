@@ -1,0 +1,10 @@
+rxn_IDs	rxnNames	K_score	grRules	rxn_formula
+r_1179	iron (II) transport	1000	YJL133W or YKR052C	iron(2+)[c] => iron(2+)[m]
+r_1178No1	iron (II) transport (No1)	1000	YMR319C	pmet_r_1178[e] + 2.3304e-08 prot_P40988[c] => iron(2+)[c]
+r_1129	coenzyme A transport	9.01739431386239	YHR002W	coenzyme A[c] => coenzyme A[m]
+r_2034	pyruvate transport	2.65518517700883	(YGL080W and YGR243W) or (YGL080W and YHR162W)	H+[c] + pyruvate[c] => H+[m] + pyruvate[m]
+r_2072	threonine transport	0.296253123520671	YDR508C	L-threonine[c] => L-threonine[m]
+r_3545	L-serine transport, cytoplasm-ER membrane	0.294711128858348	YKR039W	L-serine[c] => L-serine[erm]
+r_1237	ornithine transport	0.175545525471268	YOR130C	H+[c] + ornithine[m] => H+[m] + ornithine[c]
+r_1112_REV	AKG transporter, mitochonrial (reversible)	0	YMR241W	2-oxoglutarate[m] + citrate[c] => 2-oxoglutarate[c] + citrate[m]
+r_2045_REV	serine transport (reversible)	0	YDR508C	L-serine[m] => L-serine[c]
