@@ -1,4 +1,4 @@
-function [mutSolution,flag] = solveECmodel(mutant,model,method,prots,tol)
+function [mutSolution,flag] = solveECmodel(mutant,model,method,minIndex,tol)
 % solveECmodel
 %
 % Function that receives a model and a mutant of it and gets a flux
@@ -12,7 +12,7 @@ function [mutSolution,flag] = solveECmodel(mutant,model,method,prots,tol)
 % mutant        mutant model 
 % model         a wild-type model structure
 % method        'MOMA' or 'pFBA'
-% prots         Inxedes for the protein exchange reactions (ecModels)
+% prots         Index of the reaction to minimize (2nd objective)
 % tol           (double) numerical tolerance for bounds fixation
 %
 % mutSolution   Optimal flux distribution for the mutant model
@@ -24,7 +24,7 @@ function [mutSolution,flag] = solveECmodel(mutant,model,method,prots,tol)
 %
 
 if nargin<5
-    tol = 1E-9;
+    tol = 0;
 end
 
 minFlag = false;
@@ -37,16 +37,17 @@ elseif strcmpi(method,'pFBA')
     mutSolution = mutSolution.x;
     if ~isempty(mutSolution) && any(mutSolution)
         index = find(mutant.c);
-        if ~isempty(prots)
+        if ~isempty(minIndex)
             %Fix optimal value for the objective and then minimize the total
             %sum of protein usages
-            mutant.lb(index) = (1-tol)*mutSolution(index);
-            mutant.c(:)      = 0;
-            mutant.c(prots)  = -1;
-            mutSolution      = solveLP(mutant,1);
+            mutant = setParam(mutant,'obj',minIndex,-1);
+            mutant = setParam(mutant,'lb',index,(1-tol)*mutSolution(index));
+            mutSolution      = solveLP(mutant);
             if ~isempty(mutSolution.x) && any(mutSolution.x)
                 mutSolution = mutSolution.x;
-                minFlag    = true;
+                minFlag     = true;
+            else
+                mutSolution = zeros(length(mutant.rxns),1);
             end
         end
         %If protein usage minimization does not work or model is not EC, then 
@@ -62,7 +63,8 @@ end
 
 if ~isempty(mutSolution) && any(mutSolution)
     flag = 1;
-else 
+else
+    mutSolution = zeros(length(mutant.rxns),1);
     flag = 0;
 end
 

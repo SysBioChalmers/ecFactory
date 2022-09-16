@@ -15,8 +15,7 @@ rxnIdxs  = setdiff(rxnIdxs,rxnExIdxs);
 grRules  = model.grRules(rxnIdxs);
 grRules = grRules(~cellfun(@isempty,grRules));
 for i=1:length(grRules)
-    grRule = strsplit(grRules{i},' or ');
-    newgroup = max(candidates.groups)+1;
+    grRule   = strsplit(grRules{i},' or ');
     for isoenzyme = grRule
         isoenzyme = strrep(isoenzyme,'(','');
         isoenzyme = strrep(isoenzyme,')','');
@@ -39,17 +38,7 @@ for i=1:length(grRules)
                 shortName = {''};
                 pathway = {''};
             end
-            unique = ((numel(grRule)==1)&(numel(genes)==1));
-            
-            switch unique
-                case 0
-                    priority = 2;
-                    group = newgroup;
-                case 1
-                    priority = 1;
-                    group = 0;
-            end
-            newRow = [newTargets(j),enzyme,shortName,MW,pathway,0,0,EV_type,0,0,0,0,unique,0,group,priority];
+            newRow = [newTargets(j),enzyme,shortName,MW,pathway,'KO',0];
             candidates = [candidates;newRow];
         end
 end
