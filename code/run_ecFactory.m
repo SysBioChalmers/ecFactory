@@ -2,6 +2,9 @@ function [optStrain,remaining,step] = run_ecFactory(model,modelParam,expYield,re
 if nargin<5
     graphPlot = false;
 end
+if ~isfolder('GECKO')
+    git clone --quiet --depth=1 https://github.com/SysBioChalmers/GECKO.git
+end
 mkdir(results_folder)
 current      = pwd;
 %method parameters
@@ -16,7 +19,7 @@ lowerK     = 0.5/2;
 thresholds = [0.5 1.05]; %K-score thresholds for valid gene targets
 delLimit   = 0.05; %K-score limit for considering a target as deletion
 %read file with essential genes list
-essential = readtable('../../data/essential_genes.txt','Delimiter','\t');
+essential = readtable('../data/essential_genes.txt','Delimiter','\t');
 essential = strtrim(essential.Ids);
 %Get relevant rxn indexes
 modelParam.targetIndx  = find(strcmpi(model.rxns,modelParam.rxnTarget));
@@ -263,7 +266,7 @@ ratios   = candidates.pUsage./candidates.pUsageBio;
 idxs     = ratios < bioRatio+1E-9 & ratios > bioRatio-1E-9;
 candidates.EV_type(idxs) = {'biomass_coupled'};
 disp(' ')
-
+writetable(candidates,[results_folder '/candidates_L2.txt'],'Delimiter','\t','QuoteStrings',false);
 % 8.- Combine targets
 step = step+1;
 disp([num2str(step) '.-  **** Find an optimal combination of remaining targets ****'])
