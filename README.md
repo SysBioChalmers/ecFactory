@@ -8,6 +8,7 @@ The ecFactory method is a series of sequential steps for identification of metab
 * A functional Matlab installation (MATLAB 7.3 or higher). 
 * The [RAVEN toolbox for MATLAB](https://github.com/SysBioChalmers/RAVEN).
 * [Gurobi Optimizer](http://www.gurobi.com/registration/download-reg) for any simulations.
+* [Git](https://git-scm.com/downloads)
 
 ## Installation
 
@@ -17,9 +18,11 @@ Clone this repository into an accesible directory in your computer. No further s
 
 A case study for prediction of metabolic engineering targets for increased production of 2-phenylethanol in *S. cerevisiae* cells using [ecYeastGEM](https://github.com/SysBioChalmers/yeast-GEM) and the **ecFactory** method is explained in detail in a MATLAB live script. To run this example, open the [live script](https://github.com/SysBioChalmers/ecFactory-case-studies/blob/main/code/find_gene_targets.mlx) in MATLAB and run it! with this, you will see the outputs of the method scripts in real time. 
 
-All the relevant outputs of the method are stored in the `results folder` in this repository.
+* An additional case study for prediction of gene targets for enhanced heme production in *S. cerevisiae* has been added. Validation of a subset of the predicted gene targets can be seen [in this publication](https://doi.org/10.1073/pnas.2108245119).
 
-Last update: 2022-06-23
+All the relevant outputs of the method are stored in the `tutorials/results` folder in this repository.
+
+Last update: 2022-09-17
 
 This repository is administered by [Iván Domenzain](https://github.com/IVANDOMENZAIN), Division of Systems and Synthetic Biology, Department of Biology and Biological Engineering, Chalmers University of Technology.
 
