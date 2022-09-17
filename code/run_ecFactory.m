@@ -266,7 +266,7 @@ ratios   = candidates.pUsage./candidates.pUsageBio;
 idxs     = ratios < bioRatio+1E-9 & ratios > bioRatio-1E-9;
 candidates.EV_type(idxs) = {'biomass_coupled'};
 disp(' ')
-
+writetable(candidates,[results_folder '/candidates_L2.txt'],'Delimiter','\t','QuoteStrings',false);
 % 8.- Combine targets
 step = step+1;
 disp([num2str(step) '.-  **** Find an optimal combination of remaining targets ****'])
