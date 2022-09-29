@@ -18,14 +18,16 @@ for i=1:height(candidates)
     mutF   = 1;%candidates.OE(i);
     enzIdx = candidates.enz_pos(i);
     tempModel = optMutant;
+    
     if enzIdx>0
         tempModel.ub(enzIdx) = 1.01*candidates.maxUsage(i);
-        tempModel.lb(enzIdx) = 0.99*candidates.pUsage(i);
+        tempModel.lb(enzIdx) = 0;
         if tempModel.ub(enzIdx) <=tempModel.lb(enzIdx)
             tempModel.lb(enzIdx) = 0.95*tempModel.ub(enzIdx);
         end
        optMutant = tempModel;
         %for reactions without enzymatic reaction
+    
     else
         if strcmpi(action,'OE')
             enzUsage = 1.01*candidates.maxUsage(i);
@@ -48,6 +50,7 @@ for i=1:height(candidates)
             toRemove = [toRemove; i];
         end
     end
+    
 end
 
 if ~isempty(toRemove)
