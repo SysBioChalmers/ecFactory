@@ -10,5 +10,5 @@ YKL029C	P36013	MAE1	74.37529	sce00620  Pyruvate metabolism sce01200  Carbon meta
 YBR249C	P32449	ARO4	39.74874	sce00400  Phenylalanine, tyrosine and tryptophan biosynthesis sce01110  Biosynthesis of secondary metabolites sce01130  Biosynthesis of antibiotics sce01230  Biosynthesis of amino acids	OE	13.4215454204906	1	12	0	production_opt_tight	up_subset	2
 YHR163W	P38858	SOL3	27.78417	sce00030  Pentose phosphate pathway sce01110  Biosynthesis of secondary metabolites sce01130  Biosynthesis of antibiotics sce01200  Carbon metabolism	OE	2.03548166353802	1	5	0	production_opt_tight	up_subset	2
 YHR183W	P38720	GND1	53.54274	sce00030  Pentose phosphate pathway sce00480  Glutathione metabolism sce01110  Biosynthesis of secondary metabolites sce01130  Biosynthesis of antibiotics sce01200  Carbon metabolism	OE	2.03548166353802	1	6	0	production_opt_tight	up_subset	2
-YDL100C	Q12154	GET3	39.35328	sce00NNN  None	KD	0.262924647124674	1	4	0	biomass_coupled	down_subset	2
+YDL100C	Q12154	GET3	39.35328	sce00NNN  None	KD	0.262924647124654	1	4	0	biomass_coupled	down_subset	2
 YDR503C	Q04396	LPP1	31.58604	sce00561  Glycerolipid metabolism sce00564  Glycerophospholipid metabolism sce01110  Biosynthesis of secondary metabolites	KD	0.209468193810924	1	35	0	biomass_coupled	down_subset	2

@@ -276,7 +276,7 @@ disp(' ')
 tempModel = setParam(tempModel,'ub',modelParam.CUR_indx,1000);
 tempModel = setParam(tempModel,'lb',modelParam.CUR_indx,0);
 tempModel = setParam(tempModel,'ub',modelParam.growth_indx,1000);
-tempModel = setParam(tempModel,'lb',modelParam.growth_indx,V_bio);
+tempModel = setParam(tempModel,'lb',modelParam.growth_indx,0.99*V_bio);
 tempModel = setParam(tempModel,'ub',modelParam.targetIndx,1000);
 tempModel = setParam(tempModel,'lb',modelParam.targetIndx,0);
 %set Max product formation as objective function

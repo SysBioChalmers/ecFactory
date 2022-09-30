@@ -1,5 +1,6 @@
 function enzTable = compare_EUVR(enzTable)
-type = cell(height(enzTable),1);
+type = repelem({'*'},height(enzTable),1);
+%type = cell(height(enzTable),1);
 for i=1:height(enzTable)
     if enzTable.enz_pos(i)>0
         if enzTable.minUsageBio(i)>=0 && enzTable.minUsage(i)>=0
