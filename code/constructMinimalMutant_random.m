@@ -1,0 +1,139 @@
+function [optMutant,remaining] = constructMinimalMutant_random(model,candidates,modelParam)
+tol =-1E-12;%-1E-6;
+%get mutant with all modifications
+optMutant=model;
+toRemove = [];
+[candidates,~] = sortrows(candidates,{'priority' 'k_scores'},{'ascend' 'ascend'});
+%candidates = candidates(randperm(height(candidates)),:);
+for i=1:height(candidates)
+    gene   = candidates.genes(i);
+    action = candidates.actions(i);
+    mutF   = 1;%candidates.OE(i);
+    enzIdx = candidates.enz_pos(i);
+    tempModel = optMutant;
+    
+    if enzIdx>0
+        tempModel.ub(enzIdx) = 1.01*candidates.maxUsage(i);
+        tempModel.lb(enzIdx) = 0;
+        if tempModel.ub(enzIdx) <=tempModel.lb(enzIdx)
+            tempModel.lb(enzIdx) = 0.95*tempModel.ub(enzIdx);
+        end
+       optMutant = tempModel;
+        %for reactions without enzymatic reaction
+    
+    else
+        if strcmpi(action,'OE')
+            enzUsage = 1.01*candidates.maxUsage(i);
+            if enzUsage <= 1E-15
+                enzUsage = 1.01*candidates.maxUsage(i);
+            end
+        else
+            enzUsage = candidates.pUsage(i);
+            if strcmpi(action,'KO')
+                action = {'KD'};
+                enzUsage = 0;
+            end
+        end
+        modifications = {gene action mutF};
+        
+        [tempModel,success] = getMutantModel(optMutant,modifications,enzUsage);
+         if success
+            optMutant = tempModel;
+        else
+            toRemove = [toRemove; i];
+        end
+    end
+    
+end
+
+if ~isempty(toRemove)
+    %disp('The following gene modifications are not compatible with the rest of remaining candidate targets')
+    %disp(candidates(toRemove,[1 2 3 6]))
+    candidates(toRemove,:) = [];
+end
+
+optMutant = setParam(optMutant,'obj',modelParam.targetIndx,1);
+%obtain optimal production rate and yield
+[mutSol_r,~] = solveECmodel(optMutant,model,'pFBA',modelParam.prot_indx);
+[mutSol_y,~] = solveECmodel(optMutant,model,'pFBA',modelParam.CUR_indx);
+OptprodR =  mutSol_y(modelParam.targetIndx);%mutSol_r(modelParam.targetIndx);
+Optyield = mutSol_y(modelParam.targetIndx)/(mutSol_y(modelParam.CUR_indx));
+%Randomize order of targets
+levelCandidates = candidates(randperm(height(candidates)),:);
+counter   = 0;
+remaining = table();
+for i=1:height(levelCandidates)
+    %reverse modifications
+    gene   = levelCandidates.genes(i);
+    action = levelCandidates.actions(i);
+    enzIdx = levelCandidates.enz_pos(i);
+    short  = levelCandidates.shortNames{i};
+    mutF = 1;
+    tempMutant = optMutant;
+    %revert mutation
+    if enzIdx>0
+        saturationOpt         =  mutSol_r(enzIdx)/(optMutant.ub(enzIdx)+1E-15);
+        tempMutant.ub(enzIdx) = 1.01*model.ub(enzIdx);
+        tempMutant.lb(enzIdx) = 0.99*model.lb(enzIdx);
+        if tempMutant.ub(enzIdx) <=tempMutant.lb(enzIdx)
+            tempMutant.lb(enzIdx) = 0.95*tempMutant.ub(enzIdx);
+        end
+        
+    %for reactions without enzymatic reaction
+    else
+        enzUsage = 1E-12;
+        if strcmpi(action,'KO')
+            reversal = {'OE'};
+        else
+            if strcmpi(action,'KD')
+                reversal = {'OE'};
+            else
+                reversal = {'KD'};
+            end
+        end
+        modifications = {gene reversal mutF};
+        tempMutant    = getMutantModel(optMutant,modifications,enzUsage);
+        saturationOpt = NaN;
+    end
+    %Get max WT production rate
+    mutsol_prod = solveECmodel(tempMutant,tempMutant,'pFBA',modelParam.prot_indx);
+    %Get max WT production yield
+    mutsol_yield = solveECmodel(tempMutant,tempMutant,'pFBA',modelParam.CUR_indx);
+    mutprodR     = mutsol_prod(modelParam.targetIndx);
+    mutyield     = mutsol_yield(modelParam.targetIndx)/(mutsol_yield(modelParam.CUR_indx));
+    flag = true;
+    if enzIdx>0 && numel(enzIdx)==1
+        saturationM =  mutsol_yield(enzIdx)/(tempMutant.ub(enzIdx)+1E-15);
+        if (strcmpi(action,'OE') & saturationM <= (model.ub(enzIdx)/levelCandidates.maxUsage(i)))
+            flag = false;
+        end
+        
+    else
+        saturationM = NaN;
+    end
+    FC_y  = mutyield/Optyield;
+    FC_p  = mutprodR/OptprodR;
+    score = mean([FC_y,FC_p]);
+    %Discard genes that don't affect the optimal phenotype
+    %discard OE targets that show low saturation after reversing the
+    %modification
+    
+    if isnan(score)
+        score = 0;
+    end
+    
+    if flag && ...
+       (...
+        (score<=1+tol) || ...
+        (strcmpi(action,'OE') && saturationOpt >= 0.99) ...%%|| ((~strcmpi(action,'OE') && saturationOpt <= saturationM)) ...
+       )
+        
+        remaining = [remaining;levelCandidates(i,:)];
+        counter = counter+1;
+    else
+    	optMutant = tempMutant;
+    end
+end
+remaining = sortrows(remaining,{'priority' 'k_scores'},{'ascend' 'descend'});
+remaining= removevars(remaining,{'enz_pos' 'OE' 'minUsage' 'maxUsage' 'pUsage' 'minUsageBio' 'maxUsageBio' 'pUsageBio'});
+end
