@@ -5,7 +5,11 @@ end
 if ~isfolder('GECKO')
     git clone --quiet --depth=1 https://github.com/SysBioChalmers/GECKO.git
 end
-mkdir(results_folder)
+
+if ~exist(results_folder, 'dir')
+    mkdir(results_folder)
+end
+
 current      = pwd;
 %method parameters
 tol  = 1E-13; %numeric tolerance for determining non-zero enzyme usages
