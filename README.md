@@ -22,7 +22,7 @@ A case study for prediction of metabolic engineering targets for increased produ
 
 All the relevant outputs of the method are stored in the `tutorials/results` folder in this repository.
 
-Last update: 2022-09-17
+Last update: 2025-02-12
 
 This repository is administered by [Iván Domenzain](https://github.com/IVANDOMENZAIN), Division of Systems and Synthetic Biology, Department of Biology and Biological Engineering, Chalmers University of Technology.
 
